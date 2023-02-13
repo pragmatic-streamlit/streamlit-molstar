@@ -2,10 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='streamlit-molstar',
-    version='0.0.1',
+    version='0.0.3',
     author='mapix',
     author_email='mapix.me@gmail.com',
     packages=find_packages(),
+    include_package_data=True,
     install_requires=['streamlit'],
     url='https://github.com/mapix/streamlit-molstar',
     long_description=open('README.md').read(),
