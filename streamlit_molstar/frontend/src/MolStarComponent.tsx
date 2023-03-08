@@ -1,52 +1,52 @@
 import {
   StreamlitComponentBase,
   withStreamlitConnection,
-} from "streamlit-component-lib";
-import React, { ReactNode } from "react";
-import { FullScreen, useFullScreenHandle } from 'react-full-screen';
+} from "streamlit-component-lib"
+import React, { ReactNode } from "react"
+import { FullScreen, useFullScreenHandle } from "react-full-screen"
 // @ts-ignore
 //import Molstar from "molstar-react";
-import Molstar from "./Molstar.jsx";
-import './MolstarComponent.css';
+import Molstar from "./Molstar.jsx"
+import "./MolstarComponent.css"
 
 interface State {}
 
 const MyFullScreen = (props: any) => {
-  const handler = useFullScreenHandle();
+  const handler = useFullScreenHandle()
   return (
     <>
-      <button className='fullscreen-button' onClick={handler.enter}>
+      <button className="fullscreen-button" onClick={handler.enter}>
         <span></span>
         <span></span>
         <span></span>
         <span></span>
       </button>
-      <FullScreen className='myfullscreen' handle={handler}>
+      <FullScreen className="myfullscreen" handle={handler}>
         {props.children}
       </FullScreen>
     </>
-  );
-};
-
+  )
+}
 
 class MolstarComponent extends StreamlitComponentBase<State> {
-
   public render = (): ReactNode => {
     const height = this.props.args["height"]
     const modelFile = this.props.args["modelFile"]
     const trajFile = this.props.args["trajFile"]
-    if (modelFile.data) {
-      modelFile.data = this.props.args["modelFile_data"];
+
+    if (modelFile && modelFile.data) {
+      modelFile.data = this.props.args["modelFile_data"]
     }
     if (trajFile && trajFile.data) {
-      trajFile.data =  this.props.args["trajFile_data"];
+      trajFile.data = this.props.args["trajFile_data"]
     }
+
     return (
       <div style={{ height: height }}>
         <MyFullScreen>
           <Molstar
-            modelFile={ modelFile }
-            trajFile={ trajFile }
+            modelFile={modelFile}
+            trajFile={trajFile}
             showExpand={false}
           />
         </MyFullScreen>

@@ -1,0 +1,14 @@
+cors http://localhost:1025 {
+    log {
+        output stdout
+        level DEBUG
+    }
+    route /examples/* {
+        uri strip_prefix /examples
+        file_server {
+            root ./examples/
+            disable_canonical_uris
+        }
+    }
+    reverse_proxy /* 0.0.0.0:8501
+}
