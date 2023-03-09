@@ -159,7 +159,8 @@ def st_molstar_remote(url, traj_url=None, height="240px", key=None):
     _component_func(key=key, default=None, **params)
 
 
-def st_molstar_docking_remote(receptor_url, ligand_url, height="240px", key=None):
+def st_molstar_docking_remote(receptor_url, ligand_url, *,
+                              gt_ligand_url=None, height="240px", key=None):
     params = {
         "scene": "docking",
         "height": height,
@@ -172,6 +173,13 @@ def st_molstar_docking_remote(receptor_url, ligand_url, height="240px", key=None
             "format": _get_file_type(ligand_url),
         },
     }
+    if gt_ligand_url:
+        params.update({
+            "gtLigandFile": {
+                "url": gt_ligand_url,
+                "format": _get_file_type(gt_ligand_url),
+            },
+        })
     _component_func_docking(key=key, default=None, **params)
 
 
