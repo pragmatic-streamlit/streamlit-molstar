@@ -1,1 +1,2 @@
 recursive-include streamlit_molstar/frontend/build *
+recursive-include streamlit_molstar/frontend_docking/build *

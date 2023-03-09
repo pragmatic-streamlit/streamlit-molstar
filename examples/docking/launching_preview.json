@@ -1,0 +1,1 @@
+[{"type": "docking", "config": {"receptor": "2zy1_protein.pdb", "ligand": "2zy1_ligand.sdf"}, "title": "2zy1 docking / ground truth from CASF-2016"}, {"type": "docking", "config": {"receptor": "2zy1_protein.pdb", "ligand": "docking.2zy1.0.sdf"}, "title": "2zy1 docking / Uni-Mol's finetuned model"}]

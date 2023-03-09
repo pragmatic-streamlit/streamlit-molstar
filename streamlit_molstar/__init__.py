@@ -77,17 +77,27 @@ def st_molstar(file_path, traj_file_path=None, height="240px", key=None):
     st_molstar_content(file_content, file_format, traj_file_content, traj_file_format, height=height, key=key) 
 
 
-def st_molstar_docking(receptor_file_path, ligand_file_path, height="240px", key=None):
+def st_molstar_docking(receptor_file_path, ligand_file_path, *, gt_ligand_file_path=None, height="240px", key=None):
     with open(receptor_file_path) as f:
         receptor_file_content = f.read()
         receptor_file_format = _get_file_type(receptor_file_path)
     with open(ligand_file_path) as f:
         ligand_file_content = f.read()
         ligand_file_format = _get_file_type(ligand_file_path)
-    st_molstar_docking_content(receptor_file_content, receptor_file_format, ligand_file_content, ligand_file_format, height=height, key=key) 
+    if gt_ligand_file_path:
+        with open(gt_ligand_file_path) as f:
+            gt_ligand_file_content = f.read()
+            gt_ligand_file_format = _get_file_type(gt_ligand_file_path)
+    else:
+        gt_ligand_file_content = None
+        gt_ligand_file_format = None
+    st_molstar_docking_content(receptor_file_content, receptor_file_format, ligand_file_content, ligand_file_format,
+                               gt_ligand_file_content=gt_ligand_file_content, gt_ligand_file_format=gt_ligand_file_format, height=height, key=key) 
 
 
-def st_molstar_docking_content(receptor_file_content, receptor_file_format, ligand_file_content, ligand_file_format, height="240px", key=None):
+def st_molstar_docking_content(receptor_file_content, receptor_file_format, ligand_file_content, ligand_file_format, *,
+                               gt_ligand_file_content=None, gt_ligand_file_format=None,
+                               height="240px", key=None):
     params = {
         "scene": "docking",
         "height": height,
@@ -102,6 +112,14 @@ def st_molstar_docking_content(receptor_file_content, receptor_file_format, liga
         },
         "ligandFile_data": ligand_file_content,
     }
+    if gt_ligand_file_content:
+        params.update({
+            "gtLigandFile": {
+            "data": "<placeholder>",
+            "format": gt_ligand_file_format,
+            },
+            "gtLigandFile_data": gt_ligand_file_content,     
+        })
     _component_func_docking(key=key, default=None, **params)
 
 
@@ -161,9 +179,9 @@ def st_molstar_docking_remote(receptor_url, ligand_url, height="240px", key=None
 # During development, we can run this just as we would any other Streamlit
 # app: `$ streamlit run molstar_component/__init__.py`
 if (not _RELEASE) or os.getenv('SHOW_MOLSTAR_DEMO'):
-    st_molstar_rcsb('1LOL', key='xx')
-    st_molstar_remote("https://files.rcsb.org/view/1LOL.cif", key='sds')
-    st_molstar('examples/complex.pdb',key='3')
-    st_molstar('examples/complex.pdb', 'examples/complex.xtc', key='4')
-    st_molstar_docking('examples/docking/3d4z_protein.pdb', 'examples/docking/3d4z_ligand.sdf', key="5", height=240)
-    st_molstar_docking_remote('http://localhost:1025/examples/docking/3d4z_protein.pdb', 'http://localhost:1025/examples/docking/3d4z_ligand.sdf', height=240, key="6")
+    #st_molstar_rcsb('1LOL', key='xx')
+    #st_molstar_remote("https://files.rcsb.org/view/1LOL.cif", key='sds')
+    #st_molstar('examples/complex.pdb',key='3')
+    #st_molstar('examples/complex.pdb', 'examples/complex.xtc', key='4')
+    st_molstar_docking('examples/docking/2zy1_protein.pdb', 'examples/docking/docking.2zy1.0.sdf', gt_ligand_file_path='examples/docking/2zy1_ligand.sdf', key="5", height=240)
+    #st_molstar_docking_remote('http://localhost:1025/examples/docking/2zy1_protein.pdb', 'http://localhost:1025/examples/docking/docking.2zy1.0.sdf', height=240, key="6")

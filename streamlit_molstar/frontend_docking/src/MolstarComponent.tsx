@@ -36,12 +36,16 @@ class MolstarComponent extends StreamlitComponentBase<State> {
     const height = this.props.args["height"]
     const receptorFile = this.props.args["receptorFile"]
     const ligandFile = this.props.args["ligandFile"]
+    const gtLigandFile = this.props.args["gtLigandFile"]
 
     if (receptorFile && receptorFile.data) {
       receptorFile.data =  this.props.args["receptorFile_data"];
     }
     if (ligandFile && ligandFile.data) {
       ligandFile.data =  this.props.args["ligandFile_data"];
+    }
+    if (gtLigandFile && gtLigandFile.data) {
+      gtLigandFile.data =  this.props.args["gtLigandFile_data"];
     }
 
     return (
@@ -50,6 +54,7 @@ class MolstarComponent extends StreamlitComponentBase<State> {
           <Molstar
             receptorFile={ receptorFile }
             ligandFile={ ligandFile }
+            gtLigandFile={ gtLigandFile }
             showExpand={false}
           />
         </MyFullScreen>
