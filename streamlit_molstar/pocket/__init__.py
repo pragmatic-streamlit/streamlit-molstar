@@ -16,7 +16,7 @@ if not _RELEASE:
     )
 else:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
-    build_dir = os.path.join(parent_dir, "frontend3/build")
+    build_dir = os.path.join(parent_dir, "frontend/build")
     _component_func = components.declare_component("molstar_component_pocket", path=build_dir)
 
 
@@ -93,4 +93,6 @@ def st_molstar_pick_pocket(protein_file_path,  pockets_file_path, tmp_dir=None, 
 
 
 if (not _RELEASE) or os.getenv('SHOW_MOLSTAR_DEMO'):
+    import streamlit as st
+    st.set_page_config(layout="wide")
     st_molstar_pick_pocket('examples/pocket/protein.pdb', 'examples/pocket/protein.pdb_predictions.csv', tmp_dir='./var')
