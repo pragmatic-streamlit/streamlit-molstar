@@ -71,25 +71,25 @@ def _load_pockets(predictions_file: str):
 
 
 def st_molstar_pick_pocket(protein_file_path,  pockets_file_path, tmp_dir=None, height="240px", key=None):
-    cmd = sh.Command('/Users/wfluo/workspaces/prankweb/java-tools/dist/bin/java-tools')
-    from tempfile import NamedTemporaryFile
-    with NamedTemporaryFile(prefix='structure_', suffix='.json', dir=tmp_dir, delete=False) as sfd:
-        sfname = sfd.name
-    with NamedTemporaryFile('w', prefix='task_config_', suffix='.txt', dir=tmp_dir, encoding='utf-8', delete=False) as tfd:
-        tfd.write(f'structure-info --input {protein_file_path} --output {sfname}')
-    print(cmd.exec('-i', tfd.name, _fg=True))
-    info = {
-        "structure": _load_structure_file(sfname),
-        "pockets": _load_pockets(pockets_file_path),
-        "metadata": {},
-    }
-    with open(protein_file_path) as f:
-        content = f.read()
-    with open('a.json', 'w') as f:
-        json.dump(info, f)
-    import streamlit as st
-    #st.json(info)
-    return _component_func(info=info, content=content, key=key, height=height, default=None)
+    # cmd = sh.Command('/Users/wfluo/workspaces/prankweb/java-tools/dist/bin/java-tools')
+    # from tempfile import NamedTemporaryFile
+    # with NamedTemporaryFile(prefix='structure_', suffix='.json', dir=tmp_dir, delete=False) as sfd:
+    #     sfname = sfd.name
+    # with NamedTemporaryFile('w', prefix='task_config_', suffix='.txt', dir=tmp_dir, encoding='utf-8', delete=False) as tfd:
+    #     tfd.write(f'structure-info --input {protein_file_path} --output {sfname}')
+    # print(cmd.exec('-i', tfd.name, _fg=True))
+    # info = {
+    #     "structure": _load_structure_file(sfname),
+    #     "pockets": _load_pockets(pockets_file_path),
+    #     "metadata": {},
+    # }
+    # with open(protein_file_path) as f:
+    #     content = f.read()
+    # with open('a.json', 'w') as f:
+    #     json.dump(info, f)
+    # import streamlit as st
+    # #st.json(info)
+    return _component_func(key=key, height=height, default=None)
 
 
 if (not _RELEASE) or os.getenv('SHOW_MOLSTAR_DEMO'):
