@@ -13,7 +13,6 @@ export default class PocketList extends React.Component
     focusPocket: (index: number) => void,
     highlightPocket: (index: number, isHighlighted: boolean) => void
   }, {}> {
-
   render() {
     if (this.props.data.pockets.length === 0) {
       return (

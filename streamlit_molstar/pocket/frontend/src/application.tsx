@@ -51,7 +51,8 @@ export async function renderProteinView(predictionInfo: PredictionInfo) {
 
   const root = createRoot(container!);
   root.render(<Application molstarPlugin={MolstarPlugin} predictionInfo={predictionInfo}
-    pocketsView={PocketsViewType.Surface_Atoms_Color} 
+    pocketsView={PocketsViewType.Surface_Residues_Color} 
+    //pocketsView={PocketsViewType.Surface_Atoms_Color} 
     polymerView={PolymerViewType.Gaussian_Surface} 
     polymerColor={PolymerColorType.Clean}
     />);
@@ -107,7 +108,10 @@ export class Application extends React.Component<ReactApplicationProps, ReactApp
       "isLoading": false,
       "data": data[0],
       "pluginRcsb": data[1],
-    })}).catch((error) => {
+    }, ()=>{
+      this.onPocketsViewChange(this.props.pocketsView)
+    }
+    )}).catch((error) => {
       this.setState({
         "isLoading": false,
       })
