@@ -5,8 +5,8 @@ import os
 import streamlit.components.v1 as components
 
 
-_DEVELOP_MODE = os.getenv('DEVELOP_MODE')
-
+# _DEVELOP_MODE = os.getenv('DEVELOP_MODE')
+_DEVELOP_MODE = True
 _RELEASE = not _DEVELOP_MODE
 
 if not _RELEASE:
@@ -16,7 +16,7 @@ if not _RELEASE:
     )
 else:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
-    build_dir = os.path.join(parent_dir, "frontend2/build")
+    build_dir = os.path.join(parent_dir, "frontend3/build")
     _component_func = components.declare_component("molstar_component_pocket", path=build_dir)
 
 
