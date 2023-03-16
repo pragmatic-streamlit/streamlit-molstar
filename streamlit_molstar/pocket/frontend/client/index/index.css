@@ -1,0 +1,13 @@
+
+.index-view {
+    margin-top: 3rem;
+}
+
+.index-view .card {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.tab-content {
+    width: 100%;
+}

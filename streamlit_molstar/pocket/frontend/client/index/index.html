@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+@require("../partials/head.html")
+</head>
+<body>
+@require("../partials/navigation.html")
+<div class="container index-view">
+    <h1 class="text-center">
+        PrankWeb: Ligand Binding Site Prediction
+    </h1>
+    <p class="text-center description">
+        PrankWeb builds upon P2Rank a machine learning-based method for prediction of ligand binding sites from protein structure.
+    </p>
+    <form name="input-form">
+        <div class="card">
+            <div class="card-header">
+                Please select input method
+            </div>
+            <div class="card-body">
+                <div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="input-pdb"
+                               value="input-pdb" name="input-type">
+                        <label class="form-check-label" for="input-pdb">
+                            Experimental structures
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="input-user-file"
+                               value="input-user-file" name="input-type">
+                        <label class="form-check-label" for="input-user-file">
+                            Custom structure
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="input-uniprot"
+                               value="input-uniprot" name="input-type">
+                        <label class="form-check-label" for="input-uniprot">
+                            Predicted structures
+                        </label>
+                    </div>
+                </div>
+                <hr/>
+                <div id="input-pdb-block">
+                    <div class="mb-3">
+                        <label for="pdb-code" class="form-label">PDB Code</label>
+                        <input type="text" class="form-control" id="pdb-code"
+                               name="pdbCode"
+                               placeholder="2SRC"
+                               title="PrankWeb will use the protein file from PDB.">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               value=""
+                               id="pdb-seal-structure"
+                               title="Uncheck to allow chain filtering."
+                               checked>
+                        <label class="form-check-label"
+                               for="pdb-seal-structure">
+                            Use original structure
+                        </label>
+                    </div>
+                    <div id="pdb-chains" style="display: none">
+                        <input id="pdb-chains-store" style="display: none">
+                        <div id="pdb-chains-label">
+                            Loading chains from PDB ...
+                        </div>
+                        <div class="form-check-inline" id="pdb-chains-container">
+                            <!-- Chain check boxes are here. -->
+                        </div>
+                    </div>
+                </div>
+                <div id="input-user-file-block" style="display: none">
+                    <div class="mb-3">
+                        <label for="user-file" class="form-label">
+                            Structure file (PDB/mmCIF) with biologically relevant unit
+                        </label>
+                        <input class="form-control" type="file" id="user-file">
+                    </div>
+                    <div class="mb-3">
+                        <label for="user-file-chains" class="form-label">Restrict to chains</label>
+                        <input type="text" class="form-control" id="user-file-chains"
+                               name="userFileChains"
+                               placeholder="A,B"
+                               title="Optional. Comma separated list of chains to analyze.">
+                    </div>
+                </div>
+                <div id="input-uniprot-block" style="display: none">
+                    <div class="mb-3">
+                        <label for="uniprot-code" class="form-label">UniProt ID</label>
+                        <input type="text" class="form-control" id="uniprot-code"
+                               name="uniprotCode"
+                               placeholder="Q5VSL9"
+                               title="PrankWeb will use AlphaFold predicted structure.">
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer" id="message" style="display: none">
+                <!-- Messages is here. -->
+            </div>
+        </div>
+
+        <div class="card" id="conservation-block">
+            <div class="card-header">
+                Conservation
+            </div>
+            <div class="card-body">
+                <div>
+                    <div class="form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="conservation"
+                               title="If checked, a model that exploits conservation will be used to classify protein binding sites."
+                               checked="checked">
+                        <label class="form-check-label" for="conservation">
+                            Use conservation
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary float-md-end" id="submit-button">
+                Submit
+            </button>
+        </div>
+
+    </form>
+
+    <div style="clear: both">
+        @require("../partials/footer.html")
+    </div>
+
+</div>
+</body>
+</html>

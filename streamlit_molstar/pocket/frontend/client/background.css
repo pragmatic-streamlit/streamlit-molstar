@@ -1,0 +1,5 @@
+body {
+    background-image: url(./assets/images/background-light.png);
+    background-size: cover;
+    background-attachment: fixed;
+}
