@@ -1,4 +1,5 @@
 import {
+  Streamlit,
   StreamlitComponentBase,
   withStreamlitConnection,
 } from "streamlit-component-lib"
@@ -57,9 +58,12 @@ async function initialize() {
 };
 
 class MolstarComponent extends StreamlitComponentBase<State> {
-
+  componentDidUpdate(): void {
+    Streamlit.setFrameHeight(1000);
+  }
   componentDidMount(): void {
     initialize();
+    Streamlit.setFrameHeight(1000);
   }
   public render = (): ReactNode => {
     const height = 0;

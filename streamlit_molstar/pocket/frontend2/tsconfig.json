@@ -10,22 +10,24 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "module": "esnext",
+    "importHelpers": true,
+    "allowUmdGlobalAccess": true,
     "moduleResolution": "node",
     "noEmit": true,
     "sourceMap": false,
     "declaration": false,
     "jsx": "react",
     "types": [],
-    "allowJs": true,
+    //"allowJs": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    //"forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": false
   },
   "exclude": [
     "node_modules"
   ],
   "include": [
-    "src"
+    "src",
   ]
 }

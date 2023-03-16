@@ -12,7 +12,7 @@ _RELEASE = not _DEVELOP_MODE
 if not _RELEASE:
     _component_func = components.declare_component(
         "molstar_component_pocket",
-        url="http://localhost:3000",
+        url="http://localhost:3001",
     )
 else:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
@@ -88,9 +88,9 @@ def st_molstar_pick_pocket(protein_file_path,  pockets_file_path, tmp_dir=None, 
     with open('a.json', 'w') as f:
         json.dump(info, f)
     import streamlit as st
-    st.json(info)
+    #st.json(info)
     return _component_func(info=info, content=content, key=key, height=height, default=None)
 
 
 if (not _RELEASE) or os.getenv('SHOW_MOLSTAR_DEMO'):
-    st_molstar_pick_pocket('examples/pocket/protein.pdb', 'examples/pocket/protein.pdb_predictions.csv', tmp_dir='./')
+    st_molstar_pick_pocket('examples/pocket/protein.pdb', 'examples/pocket/protein.pdb_predictions.csv', tmp_dir='./var')

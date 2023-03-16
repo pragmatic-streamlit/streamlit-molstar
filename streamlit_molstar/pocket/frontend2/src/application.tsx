@@ -13,7 +13,7 @@ import { PocketsViewType, PolymerColorType, PolymerViewType, PredictionData, Rea
 
 import { DefaultPluginUISpec } from 'molstar/lib/mol-plugin-ui/spec';
 import { createPluginUI } from 'molstar/lib/mol-plugin-ui';
-//import 'molstar/lib/mol-plugin-ui/skin/light.scss';
+import 'molstar/lib/mol-plugin-ui/skin/light.scss';
 import { RcsbFv, RcsbFvTrackDataElementInterface } from "@rcsb/rcsb-saguaro";
 import { highlightSurfaceAtomsInViewerLabelId, overPaintPolymer, updatePolymerView, showPocketInCurrentRepresentation } from './molstar-visualise';
 
@@ -96,7 +96,7 @@ export class Application extends React.Component<ReactApplicationProps, ReactApp
       this.setState({
       "isLoading": false,
       "data": data[0],
-      "pluginRcsb": data[1]
+      "pluginRcsb": data[1],
     })}).catch((error) => {
       this.setState({
         "isLoading": false,

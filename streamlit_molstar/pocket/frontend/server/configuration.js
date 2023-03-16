@@ -1,7 +1,7 @@
 // This configuration is used only in develop mode.
 module.exports = {
   // Port used to run-develop instance.
-  "port": 3001,
+  "port": 3002,
   // Use this to server data from files. Thus, you can develop
   // frontend without the need to run another component.
   //"proxy-directory": "../../data/database/",
