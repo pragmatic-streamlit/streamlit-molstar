@@ -1,0 +1,45 @@
+//not needed now
+/*@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url(./assets/fonts/glyphicons-halflings-regular.eot);
+  src: url(./assets/fonts/glyphicons-halflings-regular.eot?#iefix) format('embedded-opentype'),
+  url(./assets/fonts/glyphicons-halflings-regular.woff2) format('woff2'),
+  url(./assets/fonts/glyphicons-halflings-regular.woff) format('woff'),
+  url(./assets/fonts/glyphicons-halflings-regular.ttf) format('truetype'),
+  url(./assets/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format('svg')
+}*/
+
+/*!
+ * Bootstrap v5.1.3 (https://getbootstrap.com/)
+ * Copyright 2011-2021 The Bootstrap Authors
+ * Copyright 2011-2021 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+
+//// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+//@import "../node_modules/bootstrap/scss/functions";
+//
+//// 2. Include any default variable overrides here
+//
+//// 3. Include remainder of required Bootstrap stylesheets
+//@import "../node_modules/bootstrap/scss/variables";
+//@import "../node_modules/bootstrap/scss/mixins";
+//
+//// 4. Include any optional Bootstrap components as you like
+//@import "../node_modules/bootstrap/scss/root";
+//@import "../node_modules/bootstrap/scss/reboot";
+//@import "../node_modules/bootstrap/scss/nav";
+//@import "../node_modules/bootstrap/scss/navbar";
+//@import "../node_modules/bootstrap/scss/containers";
+//@import "../node_modules/bootstrap/scss/card";
+//
+//@import "../node_modules/bootstrap/scss/bootstrap-grid";
+
+@font-face {
+  font-family: 'bootstrap-icons';
+  src:
+  url(./assets/fonts/bootstrap-icons.woff2) format('woff2'),
+  url(./assets/fonts/bootstrap-icons.woff) format('woff'),
+}
+
+@import "~bootstrap/scss/bootstrap";

@@ -1,2 +1,4 @@
 recursive-include streamlit_molstar/frontend/build *
-recursive-include streamlit_molstar/frontend_docking/build *
+recursive-include streamlit_molstar/docking/frontend/build *
+recursive-include streamlit_molstar/pocket/frontend/build *
+include streamlit_molstar/pocket/java-tools

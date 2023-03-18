@@ -1,6 +1,9 @@
 .msp-btn-icon[title="Toggle Expanded Viewport"] {
     display: none;
 }
+.myfullscreen > div {
+  position: inherit !important;
+}
 
 .fullscreen-button {
     position: absolute;
