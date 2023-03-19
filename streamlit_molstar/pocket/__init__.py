@@ -154,7 +154,45 @@ def st_molstar_pockets(protein_file_path, structure_file_path, pockets_file_path
     }
 
 
-def select_pocket_from_local_protein(protein_file_path, *, multi_select=False,  p2rank_home=None, key=None):
+def get_pockets_from_local_protein(protein_file_path, *, p2rank_home=None, preview=True, key=None):
+    p2rank_home = p2rank_home or os.getenv('P2RANK_HOME')
+    assert p2rank_home
+    if isinstance(content, str):
+        content = content.encode('utf-8')
+    md5hash = hashlib.md5(content).hexdigest()
+    
+    workspace_info = get_success_workspace_info(md5hash, ftype)
+    if not workspace_info:    
+        if st.button('Start Discover Pockets'):
+            with st.spinner('wait_for_it'):
+                workspace_info = get_workspace_info_from_content(content, ftype, md5hash)
+                predict_path_p = Path(workspace_info['workdir']) / 'predict'
+                cmd = sh.Command(os.path.join(p2rank_home, 'prank'))
+                args = ['predict', '-f', workspace_info['protein_file_path'], '-o', str(predict_path_p)]
+                cmd(*args, _cwd=p2rank_home, _fg=True)
+                protein_file_name = os.path.basename(workspace_info['protein_file_path'])
+                tmp_pockets_file_path_p = predict_path_p / f'{protein_file_name}_predictions.csv'
+                sh.cp(str(tmp_pockets_file_path_p), workspace_info['pockets_file_path'])
+    if workspace_info:
+        pockets = st_molstar_pockets(workspace_info['protein_file_path'],
+                                     workspace_info['structure_file_path'],
+                                     workspace_info['pockets_file_path'], preview=preview, key=key)
+        return pockets  
+
+
+def select_pocket_from_local_protein(protein_file_path, *, multi_select=False,  preview=True, p2rank_home=None, key=None):
+    pockets = get_pockets_from_local_protein(protein_file_path, p2rank_home=p2rank_home, preview=preview, key=key)
+    if pockets:
+        if multi_select:
+           selected_pockets = st.multiselect('Choose Pocket', pockets.keys(), format_func=lambda x: f"{x} | {pockets[x]}", key=f'{key}-select-box')
+           selected = [pockets[i] for i in selected_pockets]
+        else:
+           selected_pocket = st.selectbox('Choose Pocket', pockets.keys(), format_func=lambda x: f"{x} | {pockets[x]}", key=f'{key}-select-box')
+           selected = pockets[selected_pocket]
+        return selected
+
+
+def get_pockets_from_local_protein(protein_file_path, *, p2rank_home=None, preview=True, key=None):
     p2rank_home = p2rank_home or os.getenv('P2RANK_HOME')
     assert p2rank_home
     with open(protein_file_path, 'rb') as f:
@@ -162,7 +200,7 @@ def select_pocket_from_local_protein(protein_file_path, *, multi_select=False,  
         ftype = _get_file_type(protein_file_path)
     workspace_info = get_success_workspace_info(md5hash, ftype)
     if not workspace_info:    
-        if st.button('Process'):
+        if st.button('Start Discover Pockets'):
             with st.spinner('wait_for_it'):
                 workspace_info = get_workspace_info_from_path(protein_file_path, md5hash, ftype)
                 predict_path_p = Path(workspace_info['workdir']) / 'predict'
@@ -175,14 +213,9 @@ def select_pocket_from_local_protein(protein_file_path, *, multi_select=False,  
     if workspace_info:
         pockets = st_molstar_pockets(workspace_info['protein_file_path'],
                                      workspace_info['structure_file_path'],
-                                     workspace_info['pockets_file_path'], key=key)
-        if multi_select:
-           selected_pockets = st.multiselect('Choose Pocket', pockets.keys(), format_func=lambda x: f"{x} | {pockets[x]}", key=f'{key}-select-box')
-           selected = [pockets[i] for i in selected_pockets]
-        else:
-           selected_pocket = st.selectbox('Choose Pocket', pockets.keys(), format_func=lambda x: f"{x} | {pockets[x]}", key=f'{key}-select-box')
-           selected = pockets[selected_pocket]
-        return workspace_info['protein_file_path'], selected
+                                     workspace_info['pockets_file_path'], preview=preview, key=key)
+        return pockets
+
 
 def select_pocket_from_upload_protein(*, multi_select=False, p2rank_home=None, preview=True, key=None):
     file = st.file_uploader('Protein', type='pdb')
@@ -203,7 +236,7 @@ def select_pocket_from_protein_content(content, ftype, *, multi_select=False, p2
     return selected
 
 
-def get_pockets_from_protein_content(content, ftype, *, multi_select=False, p2rank_home=None, preview=True, key=None):
+def get_pockets_from_protein_content(content, ftype, *, p2rank_home=None, preview=True, key=None):
     p2rank_home = p2rank_home or os.getenv('P2RANK_HOME')
     assert p2rank_home
     if isinstance(content, str):
