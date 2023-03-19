@@ -15,7 +15,7 @@ class MolstarComponent extends StreamlitComponentBase<State> {
   componentDidUpdate(): void {
     setTimeout(() => {
       Streamlit.setFrameHeight();
-    }, 1000);
+    }, 0);
   }
 
   componentDidMount(): void {
@@ -31,13 +31,13 @@ class MolstarComponent extends StreamlitComponentBase<State> {
     renderProteinView(proteinFile, pocketsFile);
     setTimeout(() => {
       Streamlit.setFrameHeight();
-    }, 3000);
+    }, 0);
   }
   public render = (): ReactNode => {
     const height = 0;
     return (
-      <div style={{ height: height }}>
-      </div>
+      <>
+      </>
     )
   }
 }
