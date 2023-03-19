@@ -165,12 +165,12 @@ def select_pocket_from_local_protein(protein_file_path, *, multi_select=False,  
         if st.button('Process'):
             with st.spinner('wait_for_it'):
                 workspace_info = get_workspace_info_from_path(protein_file_path, md5hash, ftype)
+                predict_path_p = Path(workspace_info['workdir']) / 'predict'
                 cmd = sh.Command(os.path.join(p2rank_home, 'prank'))
                 args = ['predict', '-f', workspace_info['protein_file_path']]
                 cmd(*args, _cwd=p2rank_home, _fg=True)
                 protein_file_name = os.path.basename(workspace_info['protein_file_path'])
-                bname = os.path.splitext(protein_file_name)[0]
-                tmp_pockets_file_path_p = Path(p2rank_home) / 'test_output' / f'predict_{bname}' / f'{protein_file_name}_predictions.csv'
+                tmp_pockets_file_path_p = predict_path_p / f'{protein_file_name}_predictions.csv'
                 sh.cp(str(tmp_pockets_file_path_p), workspace_info['pockets_file_path'])
     if workspace_info:
         pockets = st_molstar_pockets(workspace_info['protein_file_path'],
@@ -200,7 +200,7 @@ def select_pocket_from_protein_content(content, ftype, *, multi_select=False, p2
         else:
             selected_pocket = st.selectbox('Choose Pocket', pockets.keys(), format_func=lambda x: f"{x} | {pockets[x]}", key=f'{key}-select-box')
             selected = pockets[selected_pocket]
-    return pockets
+    return selected
 
 
 def get_pockets_from_protein_content(content, ftype, *, multi_select=False, p2rank_home=None, preview=True, key=None):
@@ -215,12 +215,12 @@ def get_pockets_from_protein_content(content, ftype, *, multi_select=False, p2ra
         if st.button('Start Discover Pockets'):
             with st.spinner('wait_for_it'):
                 workspace_info = get_workspace_info_from_content(content, ftype, md5hash)
+                predict_path_p = Path(workspace_info['workdir']) / 'predict'
                 cmd = sh.Command(os.path.join(p2rank_home, 'prank'))
-                args = ['predict', '-f', workspace_info['protein_file_path']]
+                args = ['predict', '-f', workspace_info['protein_file_path'], '-o', str(predict_path_p)]
                 cmd(*args, _cwd=p2rank_home, _fg=True)
                 protein_file_name = os.path.basename(workspace_info['protein_file_path'])
-                bname = os.path.splitext(protein_file_name)[0]
-                tmp_pockets_file_path_p = Path(p2rank_home) / 'test_output' / f'predict_{bname}' / f'{protein_file_name}_predictions.csv'
+                tmp_pockets_file_path_p = predict_path_p / f'{protein_file_name}_predictions.csv'
                 sh.cp(str(tmp_pockets_file_path_p), workspace_info['pockets_file_path'])
     if workspace_info:
         pockets = st_molstar_pockets(workspace_info['protein_file_path'],
