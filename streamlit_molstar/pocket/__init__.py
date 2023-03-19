@@ -205,7 +205,7 @@ def get_pockets_from_local_protein(protein_file_path, *, p2rank_home=None, previ
                 workspace_info = get_workspace_info_from_path(protein_file_path, md5hash, ftype)
                 predict_path_p = Path(workspace_info['workdir']) / 'predict'
                 cmd = sh.Command(os.path.join(p2rank_home, 'prank'))
-                args = ['predict', '-f', workspace_info['protein_file_path']]
+                args = ['predict', '-f', workspace_info['protein_file_path'], '-o', str(predict_path_p)]
                 cmd(*args, _cwd=p2rank_home, _fg=True)
                 protein_file_name = os.path.basename(workspace_info['protein_file_path'])
                 tmp_pockets_file_path_p = predict_path_p / f'{protein_file_name}_predictions.csv'
