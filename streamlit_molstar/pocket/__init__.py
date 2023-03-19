@@ -124,6 +124,7 @@ def get_workspace_info_from_content(fcontent, ftype, md5hash) -> Tuple[Path]:
 def get_workspace_info_from_path(protein_file_path, md5hash, ftype) -> Tuple[Path]:
     workspace_info = get_workspace_info(md5hash, ftype, fresh=True, create=True)
     sh.cp(protein_file_path, workspace_info['protein_file_path'])
+    gen_structure(workspace_info)
     return workspace_info
 
 
