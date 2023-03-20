@@ -38,7 +38,7 @@ else:
     # replace the `url` param with `path`, and point it to to the component's
     # build directory:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
-    build_dir = os.path.join(parent_dir, "frontend_docking/build")
+    build_dir = os.path.join(parent_dir, "frontend/build")
     _component_func_docking = components.declare_component("molstar_component_docking", path=build_dir)
 
 
