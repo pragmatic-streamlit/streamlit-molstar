@@ -26,8 +26,9 @@ import { PluginStateObject as PSO, PluginStateTransform } from 'molstar/lib/mol-
 import { Task } from 'molstar/lib/mol-task';
 import { ParamDefinition as PD } from 'molstar/lib/mol-util/param-definition';
 import { StateObject } from 'molstar/lib/mol-state';
-import { Structure } from 'molstar/lib/mol-model/structure';
-import { StructurePreset } from './viewport';
+import { Structure, Model } from 'molstar/lib/mol-model/structure';
+import { Loci } from 'molstar/lib/mol-model/loci';
+import { StructurePreset, ViewportComponent } from './viewport';
 
 const CustomFormats = [
   ['g3d', G3dProvider]
@@ -197,6 +198,9 @@ class Viewer {
           left: options.layoutShowLeftPanel ? undefined : 'none',
         },
         remoteState: options.layoutShowRemoteState ? 'default' : 'none',
+        viewport: {
+          view: ViewportComponent
+        }
       },
       config: [
         [PluginConfig.General.DisableAntialiasing, options.disableAntialiasing],
@@ -211,7 +215,6 @@ class Viewer {
         [PluginConfig.Viewport.ShowControls, options.viewportShowControls],
         [PluginConfig.Viewport.ShowSettings, options.viewportShowSettings],
         [PluginConfig.Viewport.ShowSelectionMode, options.viewportShowSelectionMode],
-        //[PluginConfig.Viewport.ShowAnimation, options.viewportShowAnimation],
         [PluginConfig.Viewport.ShowAnimation, options.viewportShowAnimation],
         [PluginConfig.Viewport.ShowTrajectoryControls, options.viewportShowTrajectoryControls],
         [PluginConfig.State.DefaultServer, options.pluginStateServer],
@@ -250,6 +253,7 @@ class Viewer {
       const model = await plugin.builders.structure.createModel(trajectory);
       const modelProperties = await plugin.builders.structure.insertModelProperties(model);
       const structure = await plugin.builders.structure.createStructure(modelProperties || model);
+      
       const structureProperties = await plugin.builders.structure.insertStructureProperties(structure);
       structures.push({ ref: structureProperties ? structureProperties.ref : structure.ref });
     }
@@ -258,13 +262,27 @@ class Viewer {
     // TODO only works with using loadStructuresFromUrlsAndMerge once
     //      need some more API metho to work with the hierarchy
     plugin.managers.structure.hierarchy.updateCurrent(plugin.managers.structure.hierarchy.current.structures, 'remove');
-
     const dependsOn = structures.map(({ ref }) => ref);
     const data = plugin.state.data.build().toRoot().apply(MergeStructures, { structures }, { dependsOn });
     const structure = await data.commit();
+   
     const structureProperties = await plugin.builders.structure.insertStructureProperties(structure);
     plugin.behaviors.canvas3d.initialized.subscribe(async v => {
-      await plugin.builders.structure.representation.applyPreset(structureProperties || structure, StructurePreset);
+      const res = await plugin.builders.structure.representation.applyPreset(structureProperties || structure, StructurePreset);
+      // console.log(res.components);
+      // const loci = Structure.toStructureElementLoci(res.components.ligand.obj.data);
+      // const polymerLoci = Structure.toStructureElementLoci(res.components.polymer.obj.data);
+      // console.log(plugin.canvas3d.camera);
+      // console.log(plugin.canvas3d.camera.getFocus(loci));
+      // const ligandCenter = Loci.getCenter(loci);
+      // plugin.canvas3d.camera.position = Loci.getCenter(loci);
+      // plugin.canvas3d.camera.target = Loci.getCenter(polymerLoci);
+      // plugin.canvas3d.camera.focus(Loci.getCenter(loci), 20);
+      // plugin.canvas3d.camera.up = Loci.getCenter(loci);
+      //plugin.canvas3d.camera.update();
+      
+      //plugin.canvas3d.camera.center(Loci.getCenter(loci));
+      //plugin.managers.structure.focus.setFromLoci(loci);
     });
   };
 

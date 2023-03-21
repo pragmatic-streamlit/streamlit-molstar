@@ -221,7 +221,7 @@ export class ViewportComponent extends PluginUIComponent {
   
   async _set(structures, preset) {
     await this.plugin.managers.structure.component.clear(structures);
-    await this.plugin.managers.structure.component.applyPreset(structures, preset);
+    const res = await this.plugin.managers.structure.component.applyPreset(structures, preset);
   }
 
   set = async (preset) => {
@@ -255,9 +255,9 @@ export class ViewportComponent extends PluginUIComponent {
             <div style={{ marginBottom: '4px' }}>
               <Button onClick={this.surfacePreset}>Surface</Button>
             </div>
-            {/* <div style={{ marginBottom: '4px' }}>
+            { <div style={{ marginBottom: '4px' }}>
               <Button onClick={this.pocketPreset}>Pocket</Button>
-            </div> */}
+            </div> }
             <div style={{ marginBottom: '4px' }}>
               <Button onClick={this.interactionsPreset}>Interactions</Button>
             </div>
