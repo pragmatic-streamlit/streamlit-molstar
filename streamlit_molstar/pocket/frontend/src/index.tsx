@@ -6,6 +6,5 @@ ReactDOM.render(
   <React.StrictMode>
     <MolstarComponent />
   </React.StrictMode>,
-  // <div>ddddd</div>,
   document.getElementById("root")
 )

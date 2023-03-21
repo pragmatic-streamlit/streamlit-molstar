@@ -59,6 +59,7 @@
 }
 #analyze > div.row {
 margin: 0;
+height: calc(100% - 140px);
 }
 
 
@@ -73,7 +74,7 @@ margin: 0;
     margin-left: 0;
     padding: 0;
     padding-right: 1px;
-    height: 420px;
+    height: 100%;
     overflow-y: scroll;
 }
 
