@@ -52,12 +52,12 @@ const Extensions = {
 const DefaultViewerOptions = {
   customFormats: CustomFormats,
   extensions: ObjectKeys(Extensions),
-  layoutIsExpanded: true,
-  layoutShowControls: true,
-  layoutShowRemoteState: true,
+  layoutIsExpanded: false,
+  layoutShowControls: false,
+  layoutShowRemoteState: false,
   layoutControlsDisplay: 'reactive',
   layoutShowSequence: true,
-  layoutShowLog: true,
+  layoutShowLog: false,
   layoutShowLeftPanel: true,
   collapseLeftPanel: false,
   collapseRightPanel: false,
@@ -176,7 +176,7 @@ class Viewer {
       customParamEditors: defaultSpec.customParamEditors,
       customFormats: options ? options.customFormats : {},
       layout: {
-        initialx: {
+        initial: {
           isExpanded: options.layoutIsExpanded,
           showControls: options.layoutShowControls,
           controlsDisplay: options.layoutControlsDisplay,

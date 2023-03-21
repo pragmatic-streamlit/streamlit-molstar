@@ -162,6 +162,7 @@ def get_pockets_from_local_protein(protein_file_path, *, p2rank_home=None, previ
         content = content.encode('utf-8')
     md5hash = hashlib.md5(content).hexdigest()
     
+    ftype = _get_file_type(protein_file_path)
     workspace_info = get_success_workspace_info(md5hash, ftype)
     if not workspace_info:    
         if st.button('Start Discover Pockets'):
@@ -226,7 +227,7 @@ def select_pocket_from_upload_protein(*, multi_select=False, p2rank_home=None, p
 
 
 def select_pocket_from_protein_content(content, ftype, *, multi_select=False, p2rank_home=None, preview=True, key=None):
-    pockets = get_pockets_from_protein_content(content, ftype, multi_select=multi_select, p2rank_home=p2rank_home, preview=preview, key=key)
+    pockets = get_pockets_from_protein_content(content, ftype, p2rank_home=p2rank_home, preview=preview, key=key)
     if pockets:
         if multi_select:
             selected_pockets = st.multiselect('Choose Pocket', pockets.keys(), format_func=lambda x: f"{x} | {pockets[x]}", key=f'{key}-select-box')
@@ -272,6 +273,5 @@ if _DEVELOP_MODE or os.getenv('SHOW_MOLSTAR_DEMO'):
     else:
         selected = select_pocket_from_local_protein("examples/pocket/protein.pdb", p2rank_home='/Users/wfluo/Downloads/p2rank_2.4/')
     if selected:
-        protein_file_path, pocket = selected
-        st.write('Protein Path: ', protein_file_path)
+        pocket = selected
         st.write('Selected Pocket: ', pocket)

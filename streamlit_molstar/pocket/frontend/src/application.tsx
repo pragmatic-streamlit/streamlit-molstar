@@ -6,6 +6,7 @@ import "./application.css";
 import { StructureInformation } from "./components/structure-information";
 import ToolsBox from "./components/tools-box";
 import PocketList from "./components/pocket-list";
+import { FullScreen, useFullScreenHandle } from "react-full-screen"
 
 import { sendDataToPlugins } from './data-loader';
 import { PocketsViewType, PolymerColorType, PolymerViewType, PredictionData, ReactApplicationProps, ReactApplicationState } from "./custom-types";
@@ -16,6 +17,26 @@ import 'molstar/lib/mol-plugin-ui/skin/light.scss';
 import { RcsbFv, RcsbFvTrackDataElementInterface } from "@rcsb/rcsb-saguaro";
 import { highlightSurfaceAtomsInViewerLabelId, overPaintPolymer, updatePolymerView, showPocketInCurrentRepresentation } from './molstar-visualise';
 import { PluginConfig } from "molstar/lib/mol-plugin/config";
+
+
+const MyFullScreen = (props: any) => {
+  const handler = useFullScreenHandle()
+  return (
+    <>
+      <button className="fullscreen-button" onClick={handler.enter}>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <FullScreen className="myfullscreen" handle={handler}>
+        {props.children}
+      </FullScreen>
+    </>
+  )
+}
+
+
 
 export async function renderProteinView(proteinFile: any, pocketsFile: any) {
   const wrapper = document.getElementById('application-molstar')!;

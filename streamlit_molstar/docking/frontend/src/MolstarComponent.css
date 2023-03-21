@@ -1,5 +1,5 @@
 .msp-btn-icon[title="Toggle Expanded Viewport"] {
-    display: none;
+    /*display: none;*/
 }
 
 .fullscreen-button {
@@ -98,5 +98,5 @@
   }
 
   .msp-plugin .msp-viewport-controls-buttons button[title="Toggle Controls Panel"] {
-    display: none !important;
+    /*display: none !important;*/
   }

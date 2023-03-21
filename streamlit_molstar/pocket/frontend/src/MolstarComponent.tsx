@@ -6,6 +6,7 @@ import {
 import React, { ReactNode } from "react"
 import { FullScreen, useFullScreenHandle } from "react-full-screen"
 import "./bootstrap.scss";
+import "./MolstarComponent.css";
 import { renderProteinView } from "./application";
 
 interface State {}
@@ -34,7 +35,6 @@ class MolstarComponent extends StreamlitComponentBase<State> {
     }, 0);
   }
   public render = (): ReactNode => {
-    const height = 0;
     return (
       <>
       </>

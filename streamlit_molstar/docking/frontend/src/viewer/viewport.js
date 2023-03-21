@@ -90,7 +90,7 @@ export const StructurePreset = StructureRepresentationPresetProvider({
     const { update, builder, typeParams } = StructureRepresentationPresetProvider.reprBuilder(plugin, params);
     const representations = {
       ligand: builder.buildRepresentation(update, components.ligand, { type: 'ball-and-stick', typeParams: { ...typeParams, material: CustomMaterial, sizeFactor: 0.35 }, color: 'element-symbol', colorParams: { carbonColor: { name: 'element-symbol', params: {} } } }, { tag: 'ligand' }),
-      polymer: builder.buildRepresentation(update, components.polymer, { type: 'cartoon', typeParams: { ...typeParams, material: CustomMaterial }, color: 'chain-id', colorParams: { palette: plugin.customState.colorPalette } }, { tag: 'polymer' }),
+      polymer: builder.buildRepresentation(update, components.polymer, { type: 'molecular-surface', typeParams: { ...typeParams, material: CustomMaterial }, color: 'chain-id', colorParams: { palette: plugin.customState.colorPalette } }, { tag: 'polymer' }),
     };
 
     await update.commit({ revertOnError: true });
