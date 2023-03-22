@@ -48,6 +48,7 @@ class MolstarComponent extends StreamlitComponentBase<State> {
             modelFile={modelFile}
             trajFile={trajFile}
             showExpand={false}
+            showAnimation={true}
           />
         </MyFullScreen>
       </div>

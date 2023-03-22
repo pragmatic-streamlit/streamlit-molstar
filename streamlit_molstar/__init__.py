@@ -42,7 +42,12 @@ else:
     _component_func = components.declare_component("molstar_component", path=build_dir)
 
 def _get_file_type(file_path):
-    return os.path.splitext(file_path)[1][1:].lower()
+    _type = os.path.splitext(file_path)[1][1:].lower()
+    type_mapping = {
+        'cif': 'cifCore',
+    }
+    return type_mapping.get(_type, _type)
+
 
 def st_molstar_rcsb(id, height="240px", key=None):
     url = f'https://files.rcsb.org/view/{id}.cif'
@@ -60,14 +65,18 @@ def st_molstar(file_path, traj_file_path=None, height="240px", key=None):
     else:
         traj_file_content = None
         traj_file_format = None
-    st_molstar_content(file_content, file_format, traj_file_content, traj_file_format, height=height, key=key) 
+    st_molstar_content(file_content, file_format, traj_file_content, traj_file_format,
+                    file_name=os.path.basename(file_path), traj_file_name=traj_file_path and os.path.basename(traj_file_path),
+                    height=height, key=key) 
 
 
-def st_molstar_content(file_content, file_format, traj_file_content=None, traj_file_format=None, height="240px", key=None):
+def st_molstar_content(file_content, file_format, traj_file_content=None, traj_file_format=None,
+                       *, file_name=None, traj_file_name=None, height="240px", key=None):
     params = {
         "scene": "basic",
         "height": height,
         "modelFile": {
+            "name": file_name or f"unknown.{file_format}",
             "data": "<placeholder>", # FIXME as Python -> JavaScript encoding error, So put data parent Level
             "format": file_format,
         },
@@ -75,6 +84,7 @@ def st_molstar_content(file_content, file_format, traj_file_content=None, traj_f
     }
     if traj_file_content:
         params['trajFile'] = {
+            "name": traj_file_name or f"unknown.{traj_file_format}",
             "data": "<placeholder>",
             "format": traj_file_format, 
         }
@@ -87,12 +97,14 @@ def st_molstar_remote(url, traj_url=None, height="240px", key=None):
         "scene": "basic",
         "height": height,
         "modelFile": {
+            "name": os.path.basename(url),
             "url": url,
             "format": _get_file_type(url),
         },
     }
     if traj_url:
         params['trajFile'] = {
+            "name": os.path.basename(traj_url),
             "url": traj_url,
             "format": _get_file_type(traj_url), 
         }
@@ -103,7 +115,13 @@ def st_molstar_remote(url, traj_url=None, height="240px", key=None):
 # During development, we can run this just as we would any other Streamlit
 # app: `$ streamlit run molstar_component/__init__.py`
 if (not _RELEASE) or os.getenv('SHOW_MOLSTAR_DEMO'):
+    import streamlit as st
     st_molstar_rcsb('1LOL', key='xx')
     st_molstar_remote("https://files.rcsb.org/view/1LOL.cif", key='sds')
-    st_molstar('examples/complex.pdb',key='3')
+    st_molstar('examples/complex.pdb', key='3')
+    st.write('gro')
+    st_molstar('examples/cluster_of_100.gro', key='5')
+    st.write('gro')
+    st_molstar('examples/md.gro',key='6')
+    st_molstar('examples/H2O.cif',key='7')
     st_molstar('examples/complex.pdb', 'examples/complex.xtc', key='4')

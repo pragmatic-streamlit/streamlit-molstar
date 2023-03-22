@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { DefaultPluginUISpec } from "molstar/lib/mol-plugin-ui/spec";
-import { createPluginAsync } from "molstar/lib/mol-plugin-ui/index";
 
 import { TrajectoryFromModelAndCoordinates } from 'molstar/lib/mol-plugin-state/transforms/model';
 import { StateTransforms } from 'molstar/lib/mol-plugin-state/transforms';
@@ -9,10 +8,13 @@ import { PluginConfig } from "molstar/lib/mol-plugin/config";
 import "molstar/build/viewer/molstar.css";
 import { ParamDefinition } from "molstar/lib/mol-util/param-definition";
 import { CameraHelperParams } from "molstar/lib/mol-canvas3d/helper/camera-helper";
+import { OpenFiles, DownloadFile } from 'molstar/lib/mol-plugin-state/actions/file';
+import { Asset } from 'molstar/lib/mol-util/assets';
+
+import { createPluginUI } from './create-plugin-ui';
 
 
 export const addTrajectory = async (plugin, params) => {
-  const { kind, url, format, isBinary } = params;
   if (!plugin) return;
   let model;
   let coords;
@@ -106,8 +108,7 @@ const Molstar = props => {
         [PluginConfig.Viewport.ShowAnimation, showAnimation],
         [PluginConfig.Viewport.ShowTrajectoryControls, showTrajectoryControls],
       ];
-      plugin.current = await createPluginAsync(parentRef.current, spec);
-
+      plugin.current = await createPluginUI(parentRef.current, spec);
       if (!showAxes) {
         // eslint-disable-next-line
         plugin.current.canvas3d?.setProps({
@@ -160,6 +161,7 @@ const Molstar = props => {
 
   const loadStructure = async (modelFile, trajFile, plugin) => {
     if (plugin) {
+      //console.log(plugin.dataFormats);
       plugin.clear();
       if (trajFile) {
         await addTrajectory(plugin, {
@@ -179,20 +181,23 @@ const Molstar = props => {
           preset: 'all-models',
         });
       } else if (modelFile.data) {
-        const data = await plugin.builders.data.rawData({
-          data: modelFile.data
-        });
-        const traj = await plugin.builders.structure.parseTrajectory(data, modelFile.format);
-        await plugin.builders.structure.hierarchy.applyPreset(traj, "default");
+        const asset = Asset.File(new File([modelFile.data], modelFile.name));
+        plugin.runTask(plugin.state.data.applyAction(OpenFiles, {
+          files: [asset],
+           format: { name: 'auto', params: {} },
+           visuals: true
+        })); 
       } else {
         const data = await plugin.builders.data.download(
           { url: modelFile.url }, { state: { isGhost: true } }
         );
-        let extension = modelFile.format.replace("cif", "mmcif");
-        const traj = await plugin.builders.structure.parseTrajectory(data, extension);
-        await plugin.builders.structure.hierarchy.applyPreset(traj, "default");
+        const asset = Asset.File(new File([data.obj.data], modelFile.name));
+        plugin.runTask(plugin.state.data.applyAction(OpenFiles, {
+          files: [asset],
+            format: { name: 'auto', params: {} },
+            visuals: true
+        })); 
       }
-
     }
   }
   return (
