@@ -133,6 +133,8 @@ const SurfacePreset = StructureRepresentationPresetProvider({
   display: { name: 'Surface' },
   params: () => PresetParams,
   async apply(ref, params, plugin) {
+    console.log("sdsdds");
+
     const structureCell = StateObjectRef.resolveAndCheck(plugin.state.data, ref);
     const structure = structureCell && structureCell.obj && structureCell.obj.data;
     if (!structureCell || !structure) return {};
@@ -141,7 +143,6 @@ const SurfacePreset = StructureRepresentationPresetProvider({
       ligand: await presetStaticComponent(plugin, structureCell, 'ligand'),
       polymer: await presetStaticComponent(plugin, structureCell, 'polymer'),
     };
-
     const { update, builder, typeParams } = StructureRepresentationPresetProvider.reprBuilder(plugin, params);
     const representations = {
       ligand: builder.buildRepresentation(update, components.ligand, { type: 'ball-and-stick', typeParams: { ...typeParams, material: CustomMaterial, sizeFactor: 0.26 }, color: 'element-symbol', colorParams: { carbonColor: { name: 'element-symbol', params: {} } } }, { tag: 'ligand' }),

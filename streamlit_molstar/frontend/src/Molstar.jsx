@@ -90,9 +90,6 @@ export const addTrajectory = async (plugin, params) => {
   await plugin.builders.structure.representation.applyPreset(structure, 'auto');
 };
 
-
-
-
 const InteractionsPreset = StructureRepresentationPresetProvider({
   id: 'preset-interactions',
   display: { name: 'Interactions' },
@@ -138,6 +135,14 @@ const ViewerAutoPreset = StructureRepresentationPresetProvider({
   async apply(ref, params, plugin) {
     const structureCell = StateObjectRef.resolveAndCheck(plugin.state.data, ref);
     const structure = structureCell && structureCell.obj && structureCell.obj.data;
+    const nmodels = structure.state.models[0].sourceData.data.structures? structure.state.models[0].sourceData.data.structures.length: structure.state.models[0].modelNum;
+    if (nmodels > 1){
+      plugin.config.set("viewer.show-animation-button", true);
+    } else {
+      plugin.config.set("viewer.show-animation-button", false);
+      plugin.managers.animation._animations.length = [];
+    }
+
     if (!structureCell || !structure) return {};
     
     if (structure.model.sourceData.kind === 'gro'){
@@ -182,7 +187,7 @@ const Molstar = props => {
         [PluginConfig.Viewport.ShowControls, showControls],
         [PluginConfig.Viewport.ShowSettings, showSettings],
         [PluginConfig.Viewport.ShowSelectionMode, showSelectionMode],
-        [PluginConfig.Viewport.ShowAnimation, showAnimation],
+        [PluginConfig.Viewport.ShowAnimation, true],
         [PluginConfig.Structure.DefaultRepresentationPreset, ViewerAutoPreset.id],
         [PluginConfig.Viewport.ShowTrajectoryControls, showTrajectoryControls],
       ];
@@ -272,7 +277,7 @@ const Molstar = props => {
         //    visuals: true
         // });
         //PluginCommands.State.Snapshots.OpenFile(plugin, { file: new File([modelFile.data], modelFile.name)});
-        plugin.runTask(plugin.state.data.applyAction(OpenFiles, {
+        const a = await plugin.runTask(plugin.state.data.applyAction(OpenFiles, {
           files: [asset],
            format: { name: 'auto', params: {} },
            visuals: true

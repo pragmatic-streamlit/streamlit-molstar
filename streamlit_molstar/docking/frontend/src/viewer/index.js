@@ -198,9 +198,9 @@ class Viewer {
           left: options.layoutShowLeftPanel ? undefined : 'none',
         },
         remoteState: options.layoutShowRemoteState ? 'default' : 'none',
-        viewport: {
-          view: ViewportComponent
-        }
+        // viewport: {
+        //   view: ViewportComponent
+        // }
       },
       config: [
         [PluginConfig.General.DisableAntialiasing, options.disableAntialiasing],
@@ -269,20 +269,19 @@ class Viewer {
     const structureProperties = await plugin.builders.structure.insertStructureProperties(structure);
     plugin.behaviors.canvas3d.initialized.subscribe(async v => {
       const res = await plugin.builders.structure.representation.applyPreset(structureProperties || structure, StructurePreset);
-      // console.log(res.components);
-      // const loci = Structure.toStructureElementLoci(res.components.ligand.obj.data);
-      // const polymerLoci = Structure.toStructureElementLoci(res.components.polymer.obj.data);
-      // console.log(plugin.canvas3d.camera);
-      // console.log(plugin.canvas3d.camera.getFocus(loci));
-      // const ligandCenter = Loci.getCenter(loci);
-      // plugin.canvas3d.camera.position = Loci.getCenter(loci);
-      // plugin.canvas3d.camera.target = Loci.getCenter(polymerLoci);
-      // plugin.canvas3d.camera.focus(Loci.getCenter(loci), 20);
-      // plugin.canvas3d.camera.up = Loci.getCenter(loci);
-      //plugin.canvas3d.camera.update();
-      
-      //plugin.canvas3d.camera.center(Loci.getCenter(loci));
-      //plugin.managers.structure.focus.setFromLoci(loci);
+      const x = res.components.ligand.data.boundary.sphere;
+      const cell = res.representations.polymer.cell;
+      plugin.state.data.build().to(cell.transform.ref).update({
+        ...cell.params?.values,
+        type: {
+            name: cell.params?.values.type.name,
+            params: {
+                ...cell.params?.values.type.params,
+                alpha: 0.99,
+            },
+        },
+    }).commit();
+      plugin.managers.camera.focusSphere(x);
     });
   };
 
