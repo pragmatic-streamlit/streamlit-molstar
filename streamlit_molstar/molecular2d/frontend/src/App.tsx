@@ -32,11 +32,12 @@ class App extends StreamlitComponentBase<State> {
         )
     }
 }
+export default withStreamlitConnection(App)
 
-// class TestApp extends React.Component {
+// class TestApp extends React.Component<any, any> {
 //     public render = (): ReactNode => {
 //         return (
-//             <div>
+//             <div >
 //                 <Mol2DSelector
 //                     smiles={'CC(C)CN(CC(C(CC1CCCCC1)NC(OC1C(CCO2)C2OC1)=O)O)S(C(CC1)CCC1N)(=O)=O'}
 //                     onMol2DInstanceCreated={(instance, selectionWithHydrogen) => {
@@ -51,5 +52,5 @@ class App extends StreamlitComponentBase<State> {
 //         )
 //     }
 // }
+//
 // export default TestApp
-export default withStreamlitConnection(App)

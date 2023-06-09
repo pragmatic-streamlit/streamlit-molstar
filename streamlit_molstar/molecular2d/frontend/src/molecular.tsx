@@ -1,18 +1,16 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useResizeObserver } from 'react-use-observer';
 
-const SCALE_STEP = 0.05;
 const getHeight = (width: number) => (2 * width) / 3;
 
 interface Mol2DSelectorProps {
     onMol2DInstanceCreated: (instance: any, selectionWithHydrogen: number[]) => void;
     onSelectionChanged: (selection: number[], selectionWithHydrogen: number[]) => void;
     selection: number[];
-    // eslint-disable-next-line react/require-default-props
     mol?: string;
-    // eslint-disable-next-line react/require-default-props
     smiles?: string;
 }
+
 export const Mol2DSelector = React.memo((props: Mol2DSelectorProps) => {
     const {
         mol,
@@ -21,7 +19,7 @@ export const Mol2DSelector = React.memo((props: Mol2DSelectorProps) => {
         onMol2DInstanceCreated,
         onSelectionChanged,
     } = props;
-    const scale = useRef<number>(1);
+    // const scale = useRef<number>(1);
     const domRef = useRef<any>();
     const selector = useRef<any>();
     const resize = useRef<any>();
@@ -32,18 +30,18 @@ export const Mol2DSelector = React.memo((props: Mol2DSelectorProps) => {
     const { width = 0 } = resizeObserverEntry.contentRect || {};
     const hydrogenObj = useRef<{ [key: number]: Set<number> }>({});
 
-    const onScale = (scaleStep: number) => {
-        const { mMol } = selector.current.model;
-        const newScale = scale.current + scaleStep;
-        const center = { x: width / 2, y: getHeight(width) / 2 };
-        const rate = newScale / scale.current;
-        mMol.mCoordinates.forEach((atom: { x_0: number; y_0: number }, index: number) => {
-            mMol.mCoordinates[index].x_0 = atom.x_0 + (atom.x_0 - center.x) * (rate - 1);
-            mMol.mCoordinates[index].y_0 = atom.y_0 + (atom.y_0 - center.y) * (rate - 1);
-        });
-        scale.current = newScale;
-        selector.current.drawPane.draw();
-    };
+    // const onScale = (scaleStep: number) => {
+    //     const { mMol } = selector.current.model;
+    //     const newScale = scale.current + scaleStep;
+    //     const center = { x: width / 2, y: getHeight(width) / 2 };
+    //     const rate = newScale / scale.current;
+    //     mMol.mCoordinates.forEach((atom: { x_0: number; y_0: number }, index: number) => {
+    //         mMol.mCoordinates[index].x_0 = atom.x_0 + (atom.x_0 - center.x) * (rate - 1);
+    //         mMol.mCoordinates[index].y_0 = atom.y_0 + (atom.y_0 - center.y) * (rate - 1);
+    //     });
+    //     scale.current = newScale;
+    //     selector.current.drawPane.draw();
+    // };
     const getSelectedAtoms = useCallback((withHydrogen?: boolean) => {
         if (!selector?.current?.model) {
             return [];
