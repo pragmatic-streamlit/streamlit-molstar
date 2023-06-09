@@ -22,7 +22,6 @@ class App extends StreamlitComponentBase<State> {
                 <Mol2DSelector
                     smiles={'CC(C)CN(CC(C(CC1CCCCC1)NC(OC1C(CCO2)C2OC1)=O)O)S(C(CC1)CCC1N)(=O)=O'}
                     onMol2DInstanceCreated={(instance, selectionWithHydrogen) => {
-                        console.warn(instance, selectionWithHydrogen)
                         this.ref = instance
                     }}
                     onSelectionChanged={(selection, selectionWithHydrogen) => {
