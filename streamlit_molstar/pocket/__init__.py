@@ -10,7 +10,7 @@ import streamlit as st
 
 import streamlit.components.v1 as components
 
-TMP_ROOT = Path(gettempdir()) / "streamlit-molstar"
+TMP_ROOT = Path(os.getenv("TMPDIR") or gettempdir()) / "streamlit-molstar"
 TMP_ROOT.mkdir(exist_ok=True)
 PARENT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
 
