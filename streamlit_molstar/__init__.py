@@ -8,6 +8,7 @@ from base64 import b64encode
 # (This is, of course, optional - there are innumerable ways to manage your
 # release process.)
 _DEVELOP_MODE = os.getenv('DEVELOP_MODE')
+# _DEVELOP_MODE = True
 
 _RELEASE = not _DEVELOP_MODE
 
@@ -116,10 +117,12 @@ def st_molstar_remote(url, traj_url=None, height="240px", key=None):
 # app: `$ streamlit run molstar_component/__init__.py`
 if (not _RELEASE) or os.getenv('SHOW_MOLSTAR_DEMO'):
     import streamlit as st
-    st_molstar_rcsb('1LOL', key='xx')
-    st_molstar_remote("https://files.rcsb.org/view/1LOL.cif", key='sds')
-    st_molstar('examples/complex.pdb', key='3')
-    st_molstar('examples/cluster_of_100.gro', key='5')
-    st_molstar('examples/md.gro',key='6')
-    st_molstar('examples/H2O.cif',key='7')
-    st_molstar('examples/complex.pdb', 'examples/complex.xtc', key='4')
+    st_molstar('examples/cluster_400.gro', key="li_test")
+    
+    # st_molstar_rcsb('1LOL', key='xx')
+    # st_molstar_remote("https://files.rcsb.org/view/1LOL.cif", key='sds')
+    # st_molstar('examples/complex.pdb', key='3')
+    # st_molstar('examples/cluster_of_100.gro', key='5')
+    # st_molstar('examples/md.gro',key='6')
+    # st_molstar('examples/H2O.cif',key='7')
+    # st_molstar('examples/complex.pdb', 'examples/complex.xtc', key='4')

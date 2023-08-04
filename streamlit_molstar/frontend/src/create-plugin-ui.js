@@ -1,8 +1,8 @@
 import { createElement } from 'react';
 import ReactDOM from 'react-dom';
-import { Plugin } from 'molstar/lib/mol-plugin-ui/plugin';
-import { PluginUIContext } from 'molstar/lib/mol-plugin-ui/context';
-import { DefaultPluginUISpec } from 'molstar/lib/mol-plugin-ui/spec';
+import { Plugin } from '@dp-launching/molstar/lib/mol-plugin-ui/plugin';
+import { PluginUIContext } from '@dp-launching/molstar/lib/mol-plugin-ui/context';
+import { DefaultPluginUISpec } from '@dp-launching/molstar/lib/mol-plugin-ui/spec';
 
 const createPluginUI = async (target, spec, options) => {
   const ctx = new PluginUIContext(spec || DefaultPluginUISpec());
