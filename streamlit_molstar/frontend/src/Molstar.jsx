@@ -1,25 +1,21 @@
 import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import { DefaultPluginUISpec } from "molstar/lib/mol-plugin-ui/spec";
-import { QualityAssessmentPLDDTPreset, QualityAssessmentQmeanPreset } from 'molstar/lib/extensions/model-archive/quality-assessment/behavior';
-import { QualityAssessment } from 'molstar/lib/extensions/model-archive/quality-assessment/prop';
-import { TrajectoryFromModelAndCoordinates } from 'molstar/lib/mol-plugin-state/transforms/model';
-import { StateTransforms } from 'molstar/lib/mol-plugin-state/transforms';
-import { PluginConfig } from "molstar/lib/mol-plugin/config";
-import "molstar/build/viewer/molstar.css";
-import { ParamDefinition } from "molstar/lib/mol-util/param-definition";
-import { CameraHelperParams } from "molstar/lib/mol-canvas3d/helper/camera-helper";
-import { OpenFiles } from 'molstar/lib/mol-plugin-state/actions/file';
-import { Asset } from 'molstar/lib/mol-util/assets';
-import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from 'molstar/lib/mol-plugin-state/builder/structure/representation-preset';
-import { StateObjectRef } from 'molstar/lib/mol-state';
-import { presetStaticComponent } from 'molstar/lib/mol-plugin-state/builder/structure/representation-preset';
+import { DefaultPluginUISpec } from "@dp-launching/molstar/lib/mol-plugin-ui/spec";
+import { QualityAssessmentPLDDTPreset, QualityAssessmentQmeanPreset } from '@dp-launching/molstar/lib/extensions/model-archive/quality-assessment/behavior';
+import { QualityAssessment } from '@dp-launching/molstar/lib/extensions/model-archive/quality-assessment/prop';
+import { TrajectoryFromModelAndCoordinates } from '@dp-launching/molstar/lib/mol-plugin-state/transforms/model';
+import { StateTransforms } from '@dp-launching/molstar/lib/mol-plugin-state/transforms';
+import { PluginConfig } from "@dp-launching/molstar/lib/mol-plugin/config";
+import "@dp-launching/molstar/build/viewer/molstar.css";
+import { ParamDefinition } from "@dp-launching/molstar/lib/mol-util/param-definition";
+import { CameraHelperParams } from "@dp-launching/molstar/lib/mol-canvas3d/helper/camera-helper";
+import { OpenFiles } from '@dp-launching/molstar/lib/mol-plugin-state/actions/file';
+import { Asset } from '@dp-launching/molstar/lib/mol-util/assets';
+import { PresetStructureRepresentations, StructureRepresentationPresetProvider } from '@dp-launching/molstar/lib/mol-plugin-state/builder/structure/representation-preset';
+import { StateObjectRef } from '@dp-launching/molstar/lib/mol-state';
+import { presetStaticComponent } from '@dp-launching/molstar/lib/mol-plugin-state/builder/structure/representation-preset';
 
-import { Material } from 'molstar/lib/mol-util/material';
-import { InteractionsRepresentationProvider } from 'molstar/lib/mol-model-props/computed/representations/interactions';
-import { InteractionTypeColorThemeProvider } from 'molstar/lib/mol-model-props/computed/themes/interaction-type';
-import { Color } from 'molstar/lib/mol-util/color';
-
+import { Material } from '@dp-launching/molstar/lib/mol-util/material';
 
 import { createPluginUI } from './create-plugin-ui';
 const CustomMaterial = Material({ roughness: 0.2, metalness: 0 });
@@ -107,9 +103,6 @@ const InteractionsPreset = StructureRepresentationPresetProvider({
       const { update, builder, typeParams } = StructureRepresentationPresetProvider.reprBuilder(plugin, params);
       const representations = {
           ligand: builder.buildRepresentation(update, components.ligand, { type: 'ball-and-stick', typeParams: { ...typeParams, material: CustomMaterial, sizeFactor: 0.3 }, color: 'element-symbol', colorParams: { carbonColor: { name: 'element-symbol', params: {} } } }, { tag: 'all' }),
-          ballAndStick: builder.buildRepresentation(update, components.surroundings, { type: 'ball-and-stick', typeParams: { ...typeParams, material: CustomMaterial, sizeFactor: 0.1, sizeAspectRatio: 1 }, color: 'element-symbol', colorParams: { carbonColor: { name: 'element-symbol', params: {} } } }, { tag: 'ball-and-stick' }),
-          interactions: builder.buildRepresentation(update, components.interactions, { type: InteractionsRepresentationProvider, typeParams: { ...typeParams, material: CustomMaterial, includeParent: true, parentDisplay: 'between' }, color: InteractionTypeColorThemeProvider }, { tag: 'interactions' }),
-          label: builder.buildRepresentation(update, components.surroundings, { type: 'label', typeParams: { ...typeParams, material: CustomMaterial, background: false, borderWidth: 0.1 }, color: 'uniform', colorParams: { value: Color(0x000000) } }, { tag: 'label' }),
       };
 
       await update.commit({ revertOnError: true });
@@ -191,13 +184,16 @@ const Molstar = props => {
         [PluginConfig.Structure.DefaultRepresentationPreset, ViewerAutoPreset.id],
         [PluginConfig.Viewport.ShowTrajectoryControls, showTrajectoryControls],
       ];
+      if (modelFile?.format === "gro" || trajFile?.format === "gro") {
+        spec.behaviors = spec.behaviors.filter(behavior => (behavior.transformer.definition.name !== "create-structure-focus-representation"));
+      }
       plugin.current = await createPluginUI(parentRef.current, spec, {
         onBeforeUIRender: plugin => {
             // the preset needs to be added before the UI renders otherwise
             // "Download Structure" wont be able to pick it up
             plugin.builders.structure.representation.registerPreset(ViewerAutoPreset);
         }
-    });
+      });
       if (!showAxes) {
         // eslint-disable-next-line
         plugin.current.canvas3d?.setProps({
