@@ -37,7 +37,9 @@ class MolstarComponent extends StreamlitComponentBase<State> {
     return (
       <div style={{ height: height}}>
         <MyFullScreen>
-          <Molstar           />
+          <Molstar
+          files={this.props.args["files"]}
+            />
         </MyFullScreen>
       </div>
     )
