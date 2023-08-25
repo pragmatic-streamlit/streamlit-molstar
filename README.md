@@ -82,3 +82,16 @@
 ```
 
 ![Show docking with gt](examples/docking/docking_with_gt.png)
+
+
+### Multi files & Volume
+
+```python
+    import streamlit as st
+    from streamlit_molstar.auto import st_molstar_auto
+
+    st_molstar_auto(['examples/fff_output_infer.pdb', "examples/complex.pdb", "examples/fff_output_backbone.mrc"] key="6", height=240)
+
+```
+
+![Show docking with gt](examples/docking/docking_with_gt.png)
