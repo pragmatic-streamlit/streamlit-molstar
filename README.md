@@ -82,3 +82,26 @@
 ```
 
 ![Show docking with gt](examples/docking/docking_with_gt.png)
+
+
+### Auto files
+
+```python
+    import streamlit as st
+    from streamlit_molstar.auto import st_molstar_auto
+
+    import streamlit as st
+
+    st.set_page_config(layout="wide")
+
+    st.write("from remote url")
+    files = ["https://files.rcsb.org/download/3PTB.pdb", "https://files.rcsb.org/download/1LOL.pdb"]
+    st_molstar_auto(files, key="6", height="320px")
+
+    st.write("from local file")
+    files = ['examples/7bcq.pdb', "examples/7bcq.mrc"]
+
+    st_molstar_auto(files, key="7", height="320px")
+```
+
+![Auto Show](examples/auto.png)
