@@ -54,6 +54,6 @@ if (not _RELEASE) or os.getenv("SHOW_MOLSTAR_DEMO"):
     #st_molstar_auto(files, key="6", height="320px")
 
     st.write("from local file")
-    files = ['streamlit_molstar/7bcq.pdb', "streamlit_molstar/7bcq.mrc"]
+    files = ['examples/7bcq.pdb', "examples/7bcq.mrc"]
 
     st_molstar_auto(files, height="320px")
