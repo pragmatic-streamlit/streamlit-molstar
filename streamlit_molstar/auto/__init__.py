@@ -3,6 +3,18 @@ from urllib.parse import urlparse
 from os.path import exists
 import streamlit.components.v1 as components
 from base64 import b64encode
+import mrcfile
+import numpy
+
+
+def read_mrc(file_name: str) -> numpy.ndarray:
+    with mrcfile.open(file_name) as mrc:
+        return numpy.copy(mrc.data)
+
+
+def estimate_iso(x: numpy.ndarray, percentile: float = 99.) -> float:
+    return numpy.percentile(x, percentile)
+
 
 _DEVELOP_MODE = os.getenv("DEVELOP_MODE")
 _RELEASE = not _DEVELOP_MODE
@@ -27,12 +39,39 @@ else:
 
 
 def covert_to_url(file):
+    if isinstance(file, dict):
+        options = file.get('options', {})
+        file = file['file']
+        format = file.get('format', 'auto')
+        local_file = file.get('local')
+    else:
+        local_file = None
+        format = 'auto'
+        options = {}
+
+    if local_file or is_local(file):
+        local_file = local_file or file
+        if local_file.endswith(".mrc"):
+            x = read_mrc(local_file).flatten()
+            x_positive = x[x > 0]
+            iso = estimate_iso(x_positive, options.get("percentile", 99.))
+            options["isoValue"] = iso
+
     if is_local(file):
         return {
+            "source": "data",
+            "format": format,
             "data": b64encode(open(file, "rb").read()).decode("ascii"),
             "name": file,
+            "options": options,
         }
-    return file
+    return {
+        "source": "url",
+        "url": file,
+        "format": format,
+        "name": file,
+        "options": options,
+    }
 
 
 def st_molstar_auto(files, *, height="240px", key=None):
@@ -51,7 +90,7 @@ if (not _RELEASE) or os.getenv("SHOW_MOLSTAR_DEMO"):
 
     st.write("from remote url")
     files = ["https://files.rcsb.org/download/3PTB.pdb", "https://files.rcsb.org/download/1LOL.pdb"]
-    #st_molstar_auto(files, key="6", height="320px")
+    st_molstar_auto(files, key="6", height="320px")
 
     st.write("from local file")
     files = ['examples/7bcq.pdb', "examples/7bcq.mrc"]

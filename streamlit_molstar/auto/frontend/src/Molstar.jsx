@@ -48,34 +48,15 @@ const Molstar = props => {
           viewportShowExpand: false,
         })        
         for (var file of files) {
-          var format = undefined;
-          var dataformat = undefined;
+          var format = file.format;
+          var source = file.source;
+          var options = file.options;
           var isBinary = false;
-          var source = "url";
-          var fname = undefined;
 
-          if (typeof file !== 'string') { 
-            if (file.format) {
-              format = file.format;
-              dataformat = viewer.plugin.dataFormats.get(format);
-            } else {
-              fname = file.name;
-            }
-            if (file.isBinary != undefined) {
-              isBinary = file.isBinary;
-            }
-            if (file.url == undefined) {
-              file = atob(file.data);
-              source = "data";
-            } else {
-              file = file.url;
-            }
-          } else {
-            fname = file;
-          }
+          var dataformat = undefined;
 
-          if (format == undefined) {
-            const info = getFileNameInfo(fname);
+          const info = getFileNameInfo(file.name);
+          if (format === "auto") {
             format = info.ext;
             const stringTypes = viewer.plugin.dataFormats._list.filter(i => i.provider.stringExtensions != null && i.provider.stringExtensions.includes(info.ext))
             const binaryTypes = viewer.plugin.dataFormats._list.filter(i => i.provider.binaryExtensions != null && i.provider.binaryExtensions.includes(info.ext))
@@ -87,6 +68,13 @@ const Molstar = props => {
               format = binaryTypes[0].name;
               isBinary = true;
             }
+          } else {
+            dataformat = viewer.plugin.dataFormats.get(format);
+            isBinary = viewer.plugin.dataFormats.binaryExtensions.has(info.ext);
+          }
+
+          if (source === "data") {
+            file.url = get_url_from_data(atob(file.data), isBinary);
           }
 
           var category = "Trajectory";
@@ -94,27 +82,20 @@ const Molstar = props => {
             category = dataformat.provider.category;
           }
           if (category == "Volume") {    
-            if (source == "data") {
-              file = get_url_from_data(file, isBinary)
-            }
             await viewer.loadVolumeFromUrl(
               {
-                url: file, 
+                url: file.url, 
                 format: format,
                 isBinary: isBinary,
               }, [{
-                type: 'relative',
-                value: 1,
+                type: 'absolute',
+                value: file.options?.isoValue ?? 0.5,
                 alpha: 0.7,
                 color: 0xffffff,
             }]
             );
           } else if (category == "Trajectory") {
-            if (source == "data") {
-              await viewer.loadStructureFromData(file, format, isBinary)
-            } else {
-              await viewer.loadStructureFromUrl(file, format, isBinary)
-            }
+            await viewer.loadStructureFromUrl(file.url, format, isBinary)
           } else if (category == "Coordinates") {
           } else if (category == "Topology") {
           }
