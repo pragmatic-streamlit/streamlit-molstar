@@ -41,9 +41,9 @@ else:
 def covert_to_url(file):
     if isinstance(file, dict):
         options = file.get('options', {})
-        file = file['file']
         format = file.get('format', 'auto')
         local_file = file.get('local')
+        file = file['file']
     else:
         local_file = None
         format = 'auto'
