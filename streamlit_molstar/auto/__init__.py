@@ -79,8 +79,6 @@ def covert_to_url(file):
 
 def st_molstar_auto(files, *, height="240px", key=None):
     files = [covert_to_url(file) for file in files]
-    files = [{'source': 'url', 'url': 'http://localhost:8000/fff_output_backbone.mrc', 'format': 'auto', 'name': 'http://localhost:8000/fff_output_backbone.mrc', 
-              'options': {"isoValue": 1.0}}]
     component_value = _component_func(
         height=height,
         files=files, key=key, default=None)
