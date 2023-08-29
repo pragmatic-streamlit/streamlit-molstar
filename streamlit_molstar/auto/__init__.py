@@ -9,7 +9,8 @@ import numpy
 
 def read_mrc(file_name: str) -> numpy.ndarray:
     with mrcfile.open(file_name) as mrc:
-        return numpy.copy(mrc.data)
+        isoType = "absolute" if sum(mrc.nstart.item()) == 0 else "relative"
+        return numpy.copy(mrc.data).flatten(), isoType
 
 
 def estimate_iso(x: numpy.ndarray, percentile: float = 99.) -> float:
@@ -49,13 +50,15 @@ def covert_to_url(file):
         format = 'auto'
         options = {}
 
+    isoType = options.get("isoType", "absolute")
     if local_file or is_local(file):
         local_file = local_file or file
         if local_file.endswith(".mrc"):
-            x = read_mrc(local_file).flatten()
+            x, isoType = read_mrc(local_file)
             x_positive = x[x > 0]
             iso = estimate_iso(x_positive, options.get("percentile", 99.))
             options["isoValue"] = iso
+    options["isoType"] = isoType
 
     if is_local(file):
         return {
@@ -76,6 +79,8 @@ def covert_to_url(file):
 
 def st_molstar_auto(files, *, height="240px", key=None):
     files = [covert_to_url(file) for file in files]
+    files = [{'source': 'url', 'url': 'http://localhost:8000/fff_output_backbone.mrc', 'format': 'auto', 'name': 'http://localhost:8000/fff_output_backbone.mrc', 
+              'options': {"isoValue": 1.0}}]
     component_value = _component_func(
         height=height,
         files=files, key=key, default=None)
@@ -94,5 +99,7 @@ if (not _RELEASE) or os.getenv("SHOW_MOLSTAR_DEMO"):
 
     st.write("from local file")
     files = ['examples/7bcq.pdb', "examples/7bcq.mrc"]
-
-    st_molstar_auto(files, height="320px")
+    st_molstar_auto(files, key="7", height="320px")
+    
+    # files = ['examples/fff_output_backbone.mrc']
+    # st_molstar_auto(files, key="8", height="320px")

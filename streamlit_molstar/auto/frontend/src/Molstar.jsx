@@ -50,7 +50,6 @@ const Molstar = props => {
         for (var file of files) {
           var format = file.format;
           var source = file.source;
-          var options = file.options;
           var isBinary = false;
 
           var dataformat = undefined;
@@ -78,26 +77,26 @@ const Molstar = props => {
           }
 
           var category = "Trajectory";
-          if (dataformat != undefined) {
+          if (dataformat !== undefined) {
             category = dataformat.provider.category;
           }
-          if (category == "Volume") {    
+          if (category === "Volume") {    
             await viewer.loadVolumeFromUrl(
               {
                 url: file.url, 
                 format: format,
                 isBinary: isBinary,
               }, [{
-                type: 'absolute',
+                type: file.options?.isoType ?? 'absolute',
                 value: file.options?.isoValue ?? 0.5,
                 alpha: 0.7,
                 color: 0xffffff,
             }]
             );
-          } else if (category == "Trajectory") {
+          } else if (category === "Trajectory") {
             await viewer.loadStructureFromUrl(file.url, format, isBinary)
-          } else if (category == "Coordinates") {
-          } else if (category == "Topology") {
+          } else if (category === "Coordinates") {
+          } else if (category === "Topology") {
           }
         }
     }
