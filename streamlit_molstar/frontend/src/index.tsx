@@ -1,5 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom"
+// @ts-ignore
 import MolstarComponent from "./MolstarComponent"
 
 ReactDOM.render(
