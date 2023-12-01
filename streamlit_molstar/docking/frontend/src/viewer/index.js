@@ -147,6 +147,27 @@ const MergeStructures = PluginStateTransform.BuiltIn({
   }
 });
 
+const isMobile = {
+  Android: function() {
+      return navigator.userAgent.match(/Android/i);
+  },
+  BlackBerry: function() {
+      return navigator.userAgent.match(/BlackBerry/i);
+  },
+  iOS: function() {
+      return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+  },
+  Opera: function() {
+      return navigator.userAgent.match(/Opera Mini/i);
+  },
+  Windows: function() {
+      return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+  },
+  any: function() {
+      return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+  }
+};
+
 class Viewer {
 
   constructor(plugin) {
@@ -271,13 +292,14 @@ class Viewer {
       const res = await plugin.builders.structure.representation.applyPreset(structureProperties || structure, StructurePreset);
       const x = res.components.ligand.data.boundary.sphere;
       const cell = res.representations.polymer.cell;
+      const ismobile = isMobile.any();
       plugin.state.data.build().to(cell.transform.ref).update({
         ...cell.params?.values,
         type: {
             name: cell.params?.values.type.name,
             params: {
                 ...cell.params?.values.type.params,
-                alpha: 0.99,
+                alpha: (ismobile? 1.0: 0.99),
             },
         },
     }).commit();

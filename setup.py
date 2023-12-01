@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name='streamlit-molstar',
-    version='0.2.2',
+    version='0.4.9',
     author='mapix',
     author_email='mapix.me@gmail.com',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=['streamlit'],
-    url='https://github.com/mapix/streamlit-molstar',
+    install_requires=['streamlit', 'mrcfile', 'numpy'],
+    url='https://github.com/pragmatic-streamlit/streamlit-molstar',
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
     classifiers=[
