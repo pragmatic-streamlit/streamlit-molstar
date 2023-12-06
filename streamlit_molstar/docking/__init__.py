@@ -30,7 +30,7 @@ if not _RELEASE:
         # Pass `url` here to tell Streamlit that the component will be served
         # by the local dev server that you run via `npm run start`.
         # (This is useful while your component is in development.)
-        url="http://localhost:3001",
+        url="http://localhost:3000",
     )
 else:
     # When we're distributing a production version of the component, we'll
@@ -52,6 +52,7 @@ def st_molstar_docking(
     ligand_file_path,
     *,
     gt_ligand_file_path=None,
+    gt_ligand_file_paths=None,
     height="240px",
     key=None
 ):
@@ -61,6 +62,8 @@ def st_molstar_docking(
     with open(ligand_file_path) as f:
         ligand_file_content = f.read()
         ligand_file_format = _get_file_type(ligand_file_path)
+
+    # TODO ref to gt_ligand_file_paths
     if gt_ligand_file_path:
         with open(gt_ligand_file_path) as f:
             gt_ligand_file_content = f.read()
@@ -68,6 +71,17 @@ def st_molstar_docking(
     else:
         gt_ligand_file_content = None
         gt_ligand_file_format = None
+
+    gt_ligand_file_contents = []
+    gt_ligand_file_formats = []
+    if gt_ligand_file_paths:
+        for p in gt_ligand_file_paths:
+            with open(p) as f:
+                tmp_file_content = f.read()
+                tmp_file_format = _get_file_type(p)
+                gt_ligand_file_contents.append(tmp_file_content)
+                gt_ligand_file_formats.append(tmp_file_format)
+
     st_molstar_docking_content(
         receptor_file_content,
         receptor_file_format,
@@ -75,6 +89,8 @@ def st_molstar_docking(
         ligand_file_format,
         gt_ligand_file_content=gt_ligand_file_content,
         gt_ligand_file_format=gt_ligand_file_format,
+        gt_ligand_file_contents=gt_ligand_file_contents,
+        gt_ligand_file_formats=gt_ligand_file_formats,
         height=height,
         key=key,
     )
@@ -88,6 +104,8 @@ def st_molstar_docking_content(
     *,
     gt_ligand_file_content=None,
     gt_ligand_file_format=None,
+    gt_ligand_file_contents=[],
+    gt_ligand_file_formats=[],
     height="240px",
     key=None
 ):
@@ -115,6 +133,17 @@ def st_molstar_docking_content(
                 "gtLigandFile_data": gt_ligand_file_content,
             }
         )
+
+    if gt_ligand_file_contents and gt_ligand_file_formats and len(gt_ligand_file_contents) == len(gt_ligand_file_formats):
+        gt_ligand_files = []
+        for i in range(len(gt_ligand_file_contents)):
+            gt_ligand_files.append({
+                "file": {
+                    "data": gt_ligand_file_contents[i],
+                    "format": gt_ligand_file_formats[i],
+                },
+            })
+        params.update({"gtLigandFiles": gt_ligand_files})
     _component_func_docking(key=key, default=None, **params)
 
 
@@ -154,5 +183,12 @@ if (not _RELEASE) or os.getenv("SHOW_MOLSTAR_DEMO"):
         "examples/docking/docking.2zy1.0.sdf",
         gt_ligand_file_path="examples/docking/2zy1_ligand.sdf",
         key="5",
+        height=360,
+    )
+    st_molstar_docking(
+        "examples/docking/2zy1_protein.pdb",
+        "examples/docking/docking.2zy1.0.sdf",
+        gt_ligand_file_paths=["examples/docking/2zy1_ligand.sdf"],
+        key="5-2",
         height=360,
     )

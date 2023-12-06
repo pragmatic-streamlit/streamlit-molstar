@@ -15,9 +15,15 @@ class Molstar extends React.Component {
   }
 
   componentDidMount() {
-    const { receptorFile, ligandFile, gtLigandFile } = this.props;
+    const { receptorFile, ligandFile, gtLigandFile, gtLigandFiles } = this.props;
     const files = [receptorFile, ligandFile]
     gtLigandFile && files.push(gtLigandFile)
+    console.log(gtLigandFiles)
+    if (gtLigandFiles) {
+      for (let gtFile of gtLigandFiles) {
+        files.push(gtFile)
+      }
+    }
     Viewer.create(this.parentRef, {
       layoutIsExpanded: false,
       viewportShowAnimation: false,
@@ -50,6 +56,7 @@ Molstar.propTypes = {
   receptorFile: PropTypes.object,
   ligandFile: PropTypes.object,
   gtLigandFile: PropTypes.object,
+  gtLigandFiles: PropTypes.array,
 
   // More
   width: PropTypes.string,

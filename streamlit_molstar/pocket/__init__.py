@@ -158,6 +158,8 @@ def st_molstar_pockets(protein_file_path, structure_file_path, pockets_file_path
 def get_pockets_from_local_protein(protein_file_path, *, p2rank_home=None, preview=True, key=None):
     p2rank_home = p2rank_home or os.getenv('P2RANK_HOME')
     assert p2rank_home
+    with open(protein_file_path) as f:
+        content = f.read()
     if isinstance(content, str):
         content = content.encode('utf-8')
     md5hash = hashlib.md5(content).hexdigest()
@@ -166,7 +168,7 @@ def get_pockets_from_local_protein(protein_file_path, *, p2rank_home=None, previ
     workspace_info = get_success_workspace_info(md5hash, ftype)
     if not workspace_info:    
         if st.button('Start Discover Pockets'):
-            with st.spinner('wait_for_it'):
+            with st.spinner('Calculating...'):
                 workspace_info = get_workspace_info_from_content(content, ftype, md5hash)
                 predict_path_p = Path(workspace_info['workdir']) / 'predict'
                 cmd = sh.Command(os.path.join(p2rank_home, 'prank'))
@@ -203,7 +205,7 @@ def get_pockets_from_local_protein(protein_file_path, *, p2rank_home=None, previ
     workspace_info = get_success_workspace_info(md5hash, ftype)
     if not workspace_info:    
         if st.button('Start Discover Pockets'):
-            with st.spinner('wait_for_it'):
+            with st.spinner('Calculating...'):
                 workspace_info = get_workspace_info_from_path(protein_file_path, md5hash, ftype)
                 predict_path_p = Path(workspace_info['workdir']) / 'predict'
                 cmd = sh.Command(os.path.join(p2rank_home, 'prank'))
@@ -248,7 +250,7 @@ def get_pockets_from_protein_content(content, ftype, *, p2rank_home=None, previe
     workspace_info = get_success_workspace_info(md5hash, ftype)
     if not workspace_info:    
         if st.button('Start Discover Pockets'):
-            with st.spinner('wait_for_it'):
+            with st.spinner('Calculating...'):
                 workspace_info = get_workspace_info_from_content(content, ftype, md5hash)
                 predict_path_p = Path(workspace_info['workdir']) / 'predict'
                 cmd = sh.Command(os.path.join(p2rank_home, 'prank'))
