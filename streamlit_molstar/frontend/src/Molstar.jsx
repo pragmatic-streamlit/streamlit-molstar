@@ -24,6 +24,16 @@ const PresetParams = {
 };
 
 
+function get_url_from_data(data, isBinary) {
+  var blob;
+  if (isBinary){
+    blob = new Blob([data], {type: 'application/octet-stream'});
+  } else {
+    blob = new Blob([data], {type: 'text/plain'});
+  }
+  return URL.createObjectURL(blob);
+}
+
 export const addTrajectory = async (plugin, params) => {
   if (!plugin) return;
   let model;
@@ -54,6 +64,11 @@ export const addTrajectory = async (plugin, params) => {
     model = await provider.parse(plugin, data);
   }
   {
+    // FIXME coordinates-data is not supported
+    if (params.coordinates.kind === 'coordinates-data'){
+      params.coordinates.url = get_url_from_data(params.coordinates.data, params.coordinates.isBinary);
+      params.coordinates.kind = 'coordinates-url';
+    }
     const data =
       params.coordinates.kind === 'coordinates-data'
         ? await plugin.builders.data.rawData({
@@ -249,6 +264,7 @@ const Molstar = props => {
     if (plugin) {
       plugin.clear();
       if (trajFile) {
+
         await addTrajectory(plugin, {
           model: {
             kind: (modelFile.url ? 'model-url' : 'model-data'),
@@ -256,6 +272,7 @@ const Molstar = props => {
             data: (modelFile.data ? modelFile.data : undefined),
             format: modelFile.format,
           },
+          
           coordinates: {
             kind: (trajFile.url ? 'coordinates-url' : 'coordinates-data'),
             url: (trajFile.url ? trajFile.url : undefined),

@@ -133,8 +133,6 @@ const SurfacePreset = StructureRepresentationPresetProvider({
   display: { name: 'Surface' },
   params: () => PresetParams,
   async apply(ref, params, plugin) {
-    console.log("sdsdds");
-
     const structureCell = StateObjectRef.resolveAndCheck(plugin.state.data, ref);
     const structure = structureCell && structureCell.obj && structureCell.obj.data;
     if (!structureCell || !structure) return {};

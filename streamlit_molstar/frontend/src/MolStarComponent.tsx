@@ -38,9 +38,8 @@ class MolstarComponent extends StreamlitComponentBase<State> {
       modelFile.data = this.props.args["modelFile_data"]
     }
     if (trajFile && trajFile.data) {
-      trajFile.data = this.props.args["trajFile_data"]
+      trajFile.data = this.props.args["trajFile_data"];
     }
-
     return (
       <div style={{ height: height }}>
         <MyFullScreen>

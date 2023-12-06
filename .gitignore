@@ -3,6 +3,8 @@ node_modules
 __pycache__/
 *.py[cod]
 *$py.class
+pchem/
+.DS_Store
 
 # C extensions
 *.so
