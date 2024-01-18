@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='streamlit-molstar',
-    version='0.4.20',
+    version='0.4.21',
     author='mapix',
     author_email='mapix.me@gmail.com',
     packages=find_packages(),

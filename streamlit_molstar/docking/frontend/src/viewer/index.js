@@ -148,23 +148,23 @@ const MergeStructures = PluginStateTransform.BuiltIn({
 });
 
 const isMobile = {
-  Android: function() {
-      return navigator.userAgent.match(/Android/i);
+  Android: function () {
+    return navigator.userAgent.match(/Android/i);
   },
-  BlackBerry: function() {
-      return navigator.userAgent.match(/BlackBerry/i);
+  BlackBerry: function () {
+    return navigator.userAgent.match(/BlackBerry/i);
   },
-  iOS: function() {
-      return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+  iOS: function () {
+    return navigator.userAgent.match(/iPhone|iPad|iPod/i);
   },
-  Opera: function() {
-      return navigator.userAgent.match(/Opera Mini/i);
+  Opera: function () {
+    return navigator.userAgent.match(/Opera Mini/i);
   },
-  Windows: function() {
-      return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+  Windows: function () {
+    return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
   },
-  any: function() {
-      return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+  any: function () {
+    return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
   }
 };
 
@@ -174,7 +174,7 @@ class Viewer {
     this.plugin = plugin;
   }
 
-  static async create(elementOrId, os ={}) {
+  static async create(elementOrId, os = {}) {
     const element = typeof elementOrId === 'string' ? document.getElementById(elementOrId) : elementOrId;
     if (!element) throw new Error(`Could not get element with id '${elementOrId}'`);
 
@@ -194,7 +194,7 @@ class Viewer {
         ...defaultSpec.behaviors,
         ...options.extensions.map(e => Extensions[e]),
       ],
-      animations: [ ...(defaultSpec.animations || []) ],
+      animations: [...(defaultSpec.animations || [])],
       customParamEditors: defaultSpec.customParamEditors,
       customFormats: options ? options.customFormats : {},
       layout: {
@@ -259,7 +259,7 @@ class Viewer {
     return new Viewer(plugin);
   }
 
-  static loadStructuresFromUrlsAndMerge = async (sources, plugin) => {
+  static loadStructuresFromUrlsAndMerge = async (sources, plugin, options) => {
     // clear state
     // plugin && plugin.clear();
 
@@ -269,12 +269,12 @@ class Viewer {
     for (let i = 0; i < sources.length; i++) {
       const file = sources[i];
       const { url, format } = file;
-      const data = file.data? await plugin.builders.data.rawData({ data: file.data, isBinary: false }) : await plugin.builders.data.download({ url, isBinary: false });
+      const data = file.data ? await plugin.builders.data.rawData({ data: file.data, isBinary: false }) : await plugin.builders.data.download({ url, isBinary: false });
       const trajectory = await plugin.builders.structure.parseTrajectory(data, format);
       const model = await plugin.builders.structure.createModel(trajectory);
       const modelProperties = await plugin.builders.structure.insertModelProperties(model);
       const structure = await plugin.builders.structure.createStructure(modelProperties || model);
-      
+
       const structureProperties = await plugin.builders.structure.insertStructureProperties(structure);
       structures.push({ ref: structureProperties ? structureProperties.ref : structure.ref });
     }
@@ -286,9 +286,18 @@ class Viewer {
     const dependsOn = structures.map(({ ref }) => ref);
     const data = plugin.state.data.build().toRoot().apply(MergeStructures, { structures }, { dependsOn });
     const structure = await data.commit();
-   
+
     const structureProperties = await plugin.builders.structure.insertStructureProperties(structure);
     plugin.behaviors.canvas3d.initialized.subscribe(async v => {
+      console.log(StructurePreset);
+      if (StructurePreset) {
+        if (options && options.defaultPolymerReprType) {
+          StructurePreset.extraParams.defaultPolymerReprType = {
+            isOptional: false,
+            defaultValue: options.defaultPolymerReprType,
+          }
+        }
+      }
       const res = await plugin.builders.structure.representation.applyPreset(structureProperties || structure, StructurePreset);
       const x = res.components.ligand.data.boundary.sphere;
       const cell = res.representations.polymer.cell;
@@ -296,13 +305,13 @@ class Viewer {
       plugin.state.data.build().to(cell.transform.ref).update({
         ...cell.params?.values,
         type: {
-            name: cell.params?.values.type.name,
-            params: {
-                ...cell.params?.values.type.params,
-                alpha: (ismobile? 1.0: 0.99),
-            },
+          name: cell.params?.values.type.name,
+          params: {
+            ...cell.params?.values.type.params,
+            alpha: (ismobile ? 1.0 : 0.99),
+          },
         },
-    }).commit();
+      }).commit();
       plugin.managers.camera.focusSphere(x);
     });
   };
