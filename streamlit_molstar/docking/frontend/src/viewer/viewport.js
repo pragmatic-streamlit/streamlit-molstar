@@ -17,39 +17,47 @@ import { Color } from 'molstar/lib/mol-util/color';
 import { Material } from 'molstar/lib/mol-util/material';
 
 const shinyStyle = (plugin) => {
-  return PluginCommands.Canvas3D.SetSettings(plugin, { settings: {
-    renderer: {
-      ...plugin.canvas3d.props.renderer,
-    },
-    postprocessing: {
-      ...plugin.canvas3d.props.postprocessing,
-      occlusion: { name: 'off', params: {} },
-      outline: { name: 'off', params: {} }
+  return PluginCommands.Canvas3D.SetSettings(plugin, {
+    settings: {
+      renderer: {
+        ...plugin.canvas3d.props.renderer,
+      },
+      postprocessing: {
+        ...plugin.canvas3d.props.postprocessing,
+        occlusion: { name: 'off', params: {} },
+        outline: { name: 'off', params: {} }
+      }
     }
-  } });
+  });
 };
 
 const occlusionStyle = (plugin) => {
-  return PluginCommands.Canvas3D.SetSettings(plugin, { settings: {
-    renderer: {
-      ...(plugin.canvas3d ? plugin.canvas3d.props.renderer : {}),
-    },
-    postprocessing: {
-      ...(plugin.canvas3d ? plugin.canvas3d.props.postprocessing : {}),
-      occlusion: { name: 'on', params: {
-        bias: 0.8,
-        blurKernelSize: 15,
-        radius: 5,
-        samples: 32,
-        resolutionScale: 1
-      } },
-      outline: { name: 'on', params: {
-        scale: 1.0,
-        threshold: 0.33,
-        color: Color(0x0000),
-      } }
+  return PluginCommands.Canvas3D.SetSettings(plugin, {
+    settings: {
+      renderer: {
+        ...(plugin.canvas3d ? plugin.canvas3d.props.renderer : {}),
+      },
+      postprocessing: {
+        ...(plugin.canvas3d ? plugin.canvas3d.props.postprocessing : {}),
+        occlusion: {
+          name: 'on', params: {
+            bias: 0.8,
+            blurKernelSize: 15,
+            radius: 5,
+            samples: 32,
+            resolutionScale: 1
+          }
+        },
+        outline: {
+          name: 'on', params: {
+            scale: 1.0,
+            threshold: 0.33,
+            color: Color(0x0000),
+          }
+        }
+      }
     }
-  } });
+  });
 };
 
 const ligandPlusSurroundings = StructureSelectionQuery('Surrounding Residues (5 \u212B) of Ligand plus Ligand itself', MS.struct.modifier.union([
@@ -77,7 +85,13 @@ const CustomMaterial = Material({ roughness: 0.2, metalness: 0 });
 export const StructurePreset = StructureRepresentationPresetProvider({
   id: 'preset-structure',
   display: { name: 'Structure' },
-  params: () => PresetParams,
+  extraParams: {
+    defaultPolymerReprType: {
+      isOptional: false,
+      defaultValue: 'molecular-surface',
+    },
+  },
+  params: () => ({ ...PresetParams, ...(StructurePreset.extraParams) }),
   async apply(ref, params, plugin) {
     const structureCell = StateObjectRef.resolveAndCheck(plugin.state.data, ref);
     if (!structureCell) return {};
@@ -90,7 +104,7 @@ export const StructurePreset = StructureRepresentationPresetProvider({
     const { update, builder, typeParams } = StructureRepresentationPresetProvider.reprBuilder(plugin, params);
     const representations = {
       ligand: builder.buildRepresentation(update, components.ligand, { type: 'ball-and-stick', typeParams: { ...typeParams, material: CustomMaterial, sizeFactor: 0.35 }, color: 'element-symbol', colorParams: { carbonColor: { name: 'element-symbol', params: {} } } }, { tag: 'ligand' }),
-      polymer: builder.buildRepresentation(update, components.polymer, { type: 'molecular-surface', typeParams: { ...typeParams, material: CustomMaterial }, color: 'chain-id', colorParams: { palette: plugin.customState.colorPalette } }, { tag: 'polymer' }),
+      polymer: builder.buildRepresentation(update, components.polymer, { type: params.defaultPolymerReprType || "molecular-surface", typeParams: { ...typeParams, material: CustomMaterial }, color: 'chain-id', colorParams: { palette: plugin.customState.colorPalette } }, { tag: 'polymer' }),
     };
 
     await update.commit({ revertOnError: true });
@@ -217,7 +231,7 @@ const InteractionsPreset = StructureRepresentationPresetProvider({
 export const ShowButtons = PluginConfig.item('showButtons', true);
 
 export class ViewportComponent extends PluginUIComponent {
-  
+
   async _set(structures, preset) {
     await this.plugin.managers.structure.component.clear(structures);
     const res = await this.plugin.managers.structure.component.applyPreset(structures, preset);
@@ -254,9 +268,9 @@ export class ViewportComponent extends PluginUIComponent {
             <div style={{ marginBottom: '4px' }}>
               <Button onClick={this.surfacePreset}>Surface</Button>
             </div>
-            { <div style={{ marginBottom: '4px' }}>
+            {<div style={{ marginBottom: '4px' }}>
               <Button onClick={this.pocketPreset}>Pocket</Button>
-            </div> }
+            </div>}
             <div style={{ marginBottom: '4px' }}>
               <Button onClick={this.interactionsPreset}>Interactions</Button>
             </div>

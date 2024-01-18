@@ -68,6 +68,7 @@ class MolstarComponent extends StreamlitComponentBase<State> {
             gtLigandFile={ gtLigandFile }
             gtLigandFiles={ convertedGtLigandFiles }
             showExpand={false}
+            options={this.props.args['options']}
           />
         </MyFullScreen>
       </div>

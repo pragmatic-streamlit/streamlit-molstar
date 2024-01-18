@@ -30,7 +30,7 @@ if not _RELEASE:
         # Pass `url` here to tell Streamlit that the component will be served
         # by the local dev server that you run via `npm run start`.
         # (This is useful while your component is in development.)
-        url="http://localhost:3000",
+        url="http://localhost:3001",
     )
 else:
     # When we're distributing a production version of the component, we'll
@@ -53,6 +53,7 @@ def st_molstar_docking(
     *,
     gt_ligand_file_path=None,
     gt_ligand_file_paths=None,
+    options=None,
     height="240px",
     key=None
 ):
@@ -91,6 +92,7 @@ def st_molstar_docking(
         gt_ligand_file_format=gt_ligand_file_format,
         gt_ligand_file_contents=gt_ligand_file_contents,
         gt_ligand_file_formats=gt_ligand_file_formats,
+        options=options,
         height=height,
         key=key,
     )
@@ -106,6 +108,7 @@ def st_molstar_docking_content(
     gt_ligand_file_format=None,
     gt_ligand_file_contents=[],
     gt_ligand_file_formats=[],
+    options=None,
     height="240px",
     key=None
 ):
@@ -144,11 +147,13 @@ def st_molstar_docking_content(
                 },
             })
         params.update({"gtLigandFiles": gt_ligand_files})
+    if options:
+        params.update({"options": options})
     _component_func_docking(key=key, default=None, **params)
 
 
 def st_molstar_docking_remote(
-    receptor_url, ligand_url, *, gt_ligand_url=None, height="240px", key=None
+    receptor_url, ligand_url, *, gt_ligand_url=None, options=None, height="240px", key=None
 ):
     params = {
         "scene": "docking",
@@ -171,6 +176,8 @@ def st_molstar_docking_remote(
                 },
             }
         )
+    if options:
+        params.update({"options": options})
     _component_func_docking(key=key, default=None, **params)
 
 
@@ -182,6 +189,7 @@ if (not _RELEASE) or os.getenv("SHOW_MOLSTAR_DEMO"):
         "examples/docking/2zy1_protein.pdb",
         "examples/docking/docking.2zy1.0.sdf",
         gt_ligand_file_path="examples/docking/2zy1_ligand.sdf",
+        options={"defaultPolymerReprType": "cartoon"},
         key="5",
         height=360,
     )

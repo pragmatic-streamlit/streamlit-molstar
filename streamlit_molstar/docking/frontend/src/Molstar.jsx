@@ -15,10 +15,9 @@ class Molstar extends React.Component {
   }
 
   componentDidMount() {
-    const { receptorFile, ligandFile, gtLigandFile, gtLigandFiles } = this.props;
+    const { receptorFile, ligandFile, gtLigandFile, gtLigandFiles, options } = this.props;
     const files = [receptorFile, ligandFile]
     gtLigandFile && files.push(gtLigandFile)
-    console.log(gtLigandFiles)
     if (gtLigandFiles) {
       for (let gtFile of gtLigandFiles) {
         files.push(gtFile)
@@ -30,7 +29,7 @@ class Molstar extends React.Component {
     }).then(res => {
       this.plugin = res.plugin;
       window.molstarPlugin = this.plugin;
-      Viewer.loadStructuresFromUrlsAndMerge(files, this.plugin);
+      Viewer.loadStructuresFromUrlsAndMerge(files, this.plugin, options);
       if (this.plugin && this.plugin.canvas3d) {
         this.plugin.canvas3d.setProps({ camera: { helper: {
           axes: ParamDefinition.getDefaultValues(CameraHelperParams).axes
@@ -57,6 +56,7 @@ Molstar.propTypes = {
   ligandFile: PropTypes.object,
   gtLigandFile: PropTypes.object,
   gtLigandFiles: PropTypes.array,
+  options: PropTypes.object,
 
   // More
   width: PropTypes.string,
