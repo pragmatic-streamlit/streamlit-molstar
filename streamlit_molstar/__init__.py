@@ -6,8 +6,8 @@ from base64 import b64encode
 # the component, and True when we're ready to package and distribute it.
 # (This is, of course, optional - there are innumerable ways to manage your
 # release process.)
-_DEVELOP_MODE = os.getenv("DEVELOP_MODE")
-# _DEVELOP_MODE = True
+# _DEVELOP_MODE = os.getenv("DEVELOP_MODE")
+_DEVELOP_MODE = True
 
 _RELEASE = not _DEVELOP_MODE
 
@@ -81,6 +81,48 @@ def st_molstar(
     )
 
 
+def st_molstar_multiple(
+    file_paths, *, height="240px", key=None
+) -> None:
+    file_contents = []
+    file_names = []
+    file_formats = []
+    for file_path in file_paths:
+        with open(file_path) as f:
+            file_contents.append(f.read())
+            file_names.append(os.path.basename(file_path))
+            file_formats.append(_get_file_type(file_path))
+
+    st_molstar_multiple_content(
+        file_contents, file_names, file_formats, height=height, key=key
+    )
+
+
+def st_molstar_multiple_content(
+    file_contents: list[str],
+    file_names: list[str],
+    file_formats: list[str],
+    *,
+    height="240px",
+    key=None, 
+) -> None:
+    params = {
+        "scene": "basic",
+        "height": height,
+        "modelFiles":
+            [
+                {
+                    "name": file_name,
+                    "data": "<placeholder>",
+                    "format": file_format,
+                }
+                for file_name, file_format in zip(file_names, file_formats)
+            ],
+        "modelFiles_data": file_contents,
+    }
+    _component_func(key=key, default=None, **params)
+
+
 def st_molstar_content(
     file_content,
     file_format,
@@ -145,6 +187,7 @@ if (not _RELEASE) or os.getenv("SHOW_MOLSTAR_DEMO"):
     # st_molstar('examples/cluster_of_100.gro', key='5')
     # st_molstar('examples/md.gro',key='6')
     # st_molstar('examples/H2O.cif',key='7')
-    st_molstar('../examples/complex.pdb', '../examples/complex.xtc', key='4')
-    st_molstar("../pchem/polyALA.pdb", "../pchem//polyALA_traj.dcd", key="10")
-    st_molstar_remote("http://localhost:8000/polyALA.pdb", "http://localhost:8000/polyALA_traj.dcd")
+    # st_molstar('../examples/complex.pdb', '../examples/complex.xtc', key='4')
+    # st_molstar("../pchem/polyALA.pdb", "../pchem//polyALA_traj.dcd", key="10")
+    # st_molstar_remote("http://localhost:8000/polyALA.pdb", "http://localhost:8000/polyALA_traj.dcd")
+    st_molstar_multiple(['examples/complex.pdb', "examples/H2O.cif"], key='8')
