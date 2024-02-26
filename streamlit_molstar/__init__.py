@@ -6,8 +6,8 @@ from base64 import b64encode
 # the component, and True when we're ready to package and distribute it.
 # (This is, of course, optional - there are innumerable ways to manage your
 # release process.)
-# _DEVELOP_MODE = os.getenv("DEVELOP_MODE")
-_DEVELOP_MODE = True
+_DEVELOP_MODE = os.getenv("DEVELOP_MODE")
+# _DEVELOP_MODE = True
 
 _RELEASE = not _DEVELOP_MODE
 

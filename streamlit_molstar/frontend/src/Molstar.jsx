@@ -180,10 +180,6 @@ const Molstar = props => {
   const canvasRef = useRef(null);
   const plugin = useRef(null);
 
-  console.log("modelFile", modelFile);
-  console.log("modelFiles", modelFiles);
-  console.log("trajFile", trajFile);
-
   useEffect(() => {
     (async () => {
       const spec = DefaultPluginUISpec();
@@ -280,7 +276,7 @@ const Molstar = props => {
     if (plugin) {
       plugin.clear();
       const assets = modelFiles.map((modelFile) => {
-        if (modelFile.data && typeof modelFile.data === "string") {
+        if (modelFile.data) {
           return Asset.File(new File([modelFile.data], modelFile.name));
         }
       }
@@ -316,7 +312,7 @@ const Molstar = props => {
           },
           preset: 'all-models',
         });
-      } else if (modelFile.data && typeof modelFile.data === "string") {
+      } else if (modelFile.data) {
         const asset = Asset.File(new File([modelFile.data], modelFile.name));
         // const data = await OpenFiles(plugin, {
         //   files: [asset],
