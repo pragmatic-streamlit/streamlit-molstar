@@ -170,7 +170,7 @@ const ViewerAutoPreset = StructureRepresentationPresetProvider({
 const Molstar = props => {
 
   const {
-    modelFile, trajFile,
+    modelFile, modelFiles, trajFile,
     height = '100%', width = '100%',
     showAxes = true,
     defaultShowControls = false,
@@ -179,6 +179,10 @@ const Molstar = props => {
   const parentRef = useRef(null);
   const canvasRef = useRef(null);
   const plugin = useRef(null);
+
+  console.log("modelFile", modelFile);
+  console.log("modelFiles", modelFiles);
+  console.log("trajFile", trajFile);
 
   useEffect(() => {
     (async () => {
@@ -221,7 +225,12 @@ const Molstar = props => {
           }
         });
       }
-      await loadStructure(modelFile, trajFile, plugin.current);
+      if (modelFile) {
+        await loadStructure(modelFile, trajFile, plugin.current);
+      }
+      else if (modelFiles && modelFiles.length > 0) {
+        await loadMultiple(modelFiles, plugin.current);
+      }
     })();
     return () => plugin.current = null;
   }, [])
@@ -230,6 +239,14 @@ const Molstar = props => {
   useEffect(() => {
     loadStructure(modelFile, trajFile, plugin.current);
   }, [modelFile, trajFile])
+
+
+  useEffect(() => {
+    
+    if (modelFiles && modelFiles.length > 0) {
+      loadMultiple(modelFiles, plugin.current);
+    }
+  }, [modelFiles])
 
 
   useEffect(() => {
@@ -259,6 +276,23 @@ const Molstar = props => {
   }, [showAxes])
 
   
+  const loadMultiple = async (modelFiles, plugin) => {
+    if (plugin) {
+      plugin.clear();
+      const assets = modelFiles.map((modelFile) => {
+        if (modelFile.data && typeof modelFile.data === "string") {
+          return Asset.File(new File([modelFile.data], modelFile.name));
+        }
+      }
+      );
+      const a = await plugin.runTask(plugin.state.data.applyAction(OpenFiles, {
+        files: assets,
+          format: { name: 'auto', params: {} },
+          visuals: true
+      }));
+    }
+  }
+
 
   const loadStructure = async (modelFile, trajFile, plugin) => {
     if (plugin) {
@@ -282,7 +316,7 @@ const Molstar = props => {
           },
           preset: 'all-models',
         });
-      } else if (modelFile.data) {
+      } else if (modelFile.data && typeof modelFile.data === "string") {
         const asset = Asset.File(new File([modelFile.data], modelFile.name));
         // const data = await OpenFiles(plugin, {
         //   files: [asset],
@@ -317,6 +351,7 @@ const Molstar = props => {
 
 Molstar.propTypes = {
   modelFile: PropTypes.object,
+  modelFiles: PropTypes.array,
   trajFile: PropTypes.object,
 
   // Viz Control
