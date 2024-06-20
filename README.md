@@ -25,7 +25,7 @@
 
 ### Protein & Pocket
 
-#### Select pocket from local protein (pockets predicted using p2rank)
+#### Select pocket from local protein (pockets predicted using p2rank and visualized using [PrankWeb](https://github.com/cusbg/prankweb))
 
 ```python
     import streamlit as st
@@ -40,7 +40,7 @@
 
 ![Select Pocket](examples/pocket/pocket_select.png)
 
-#### Select pocket from uploaded protein (pockets predicted using p2rank)
+#### Select pocket from uploaded protein (pockets predicted using p2rank and visualized using [PrankWeb](https://github.com/cusbg/prankweb))
 
 ```python
     import streamlit as st
@@ -55,7 +55,7 @@
 
 ![Upload & Select Pocket](examples/pocket/upload_select.png)
 
-#### Show Pockets
+#### Show Pockets (pockets predicted using p2rank and visualized using [PrankWeb](https://github.com/cusbg/prankweb))
 
 
 ```python
