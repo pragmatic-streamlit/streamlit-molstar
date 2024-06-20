@@ -1,3 +1,10 @@
+/** 
+    This file is under the Apache License 2.0.
+    The original license can be found in the `streamlit_molstar/pocket/frontend/src/LICENSE` file.
+    Copyright 2017-2024 Charles University Structural Bioinformatics Group
+    Any modifications to this file should be explicitly stated below.
+*/
+
 import React from "react";
 
 import "./tools-box.css";
