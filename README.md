@@ -5,6 +5,14 @@
 ## Install
 `pip install streamlit-molstar`
 
+## License Information
+
+This project is distributed under the MIT License. However, it incorporates code snippets from various visualization projects due to Streamlit's functionality. As a result, certain parts of the project are subject to the original licenses of these snippets. During the project's rapid development, tracking the source of all excerpts proved challenging, leading to uncertainties regarding the need for specific attributions.
+
+- For updates on license clarification, see issue #21.
+- For the pocket visualization component, refer to the license of [p2rankweb](https://github.com/pragmatic-streamlit/streamlit-molstar/pull/23).
+
+
 ## Usage
 
 ### Show Molecule
