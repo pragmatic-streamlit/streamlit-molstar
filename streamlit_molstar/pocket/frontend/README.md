@@ -1,3 +1,11 @@
+# Overview
+
+This subdirectory contains the code for predicting and visualizing pockets in proteins using the P2Rank tool. The original and updated Mol* code is available under the Apache 2.0 license at [the CUSBG GitHub - project PrankWeb](https://github.com/cusbg/prankweb/).
+
+The license is available in the `LICENSE` file in the `src` subdirectory.
+
+**Original README follows.**
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -1,3 +1,10 @@
+/** 
+    This file is under the Apache License 2.0.
+    The original license can be found in the `streamlit_molstar/pocket/frontend/src/LICENSE` file.
+    Copyright 2017-2024 Charles University Structural Bioinformatics Group
+    Any modifications to this file should be explicitly stated below.
+*/
+
 import { RcsbFv, RcsbFvDisplayTypes, RcsbFvTrackDataElementInterface, RcsbFvRowConfigInterface, RcsbFvBoardConfigInterface, RcsbFvTrackData } from "@rcsb/rcsb-saguaro";
 import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
 import { PredictionData, AlphaFoldColorsRcsb, AlphaFoldThresholdsRcsb, DefaultPocketColors } from './custom-types';
